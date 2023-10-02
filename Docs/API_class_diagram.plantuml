@@ -1,3 +1,175 @@
-@startuml
+@startuml API_Class_Diagram
 
+'*********'
+'* DTO's *'
+'*********'
+
+class RoleDto {
+    +int Id
+    +string Name
+}
+
+class UserDto {
+    +int Id
+    +string Username
+    +bool CookieAccept
+    +IEnumerable<RoleDto> Roles
+}
+UserDto "1" o-> "many" RoleDto
+
+class TokenDto {
+    +string TokenString
+    +int ExpiresIn
+}
+
+
+'***************'
+'* Controllers *'
+'***************'
+class UserController {
+    -IUserRepository _userRepository
+    +ActionResult<IEnumerable<UserDto>> Get()
+    +ActionResult<UserDto> Get(int id)
+    +ActionResult<UserDto> Update(int id, UserDto dto)
+    +ActionResult<UserDto> Delete(int id)  
+}
+UserDto <-- UserController : Uses
+UserController ....> IUserRepository : Dependency
+
+class AuthController {
+    -IHashingService _hashService
+    -ITokenService _tokenService
+    +ActionResult<TokenDto> Login(LoginDto loginDetails)
+    +ActionResult> Register(LoginDto registerDetails)
+    +ActionResult<bool> ValidateToken(TokenDto token)
+}
+AuthController ..> IHashingService : Dependency
+AuthController ..> ITokenService : Dependency
+TokenDto <-- AuthController : Uses
+
+'************'
+'* Services *'
+'************'
+
+interface "IHashingservice" as IHashingService {
+    +string HashPassword(string password, string salt)
+}
+
+class HashProcessor {
+}
+IHashingService <|.. HashProcessor : implements
+
+
+interface "ISaltservice" as ISaltService {
+    +string GenerateSalt()
+}
+
+class SaltProcessor {
+}
+ISaltService <|.. SaltProcessor : implements
+
+
+interface "ITokenService" as ITokenService {
+    +Token BuildNewToken(UserDto user)
+}
+UserDto <--- ITokenService
+
+class TokenProcessor {
+    +Token BuildNewToken()
+}
+TokenService --> Token : uses
+ITokenService <|.. TokenProcessor : implements
+
+
+'**********'
+'* Models *'
+'**********'
+
+class User {
+    +int Id
+    +string Username
+    +string PasswordHash
+    +int Salt
+}
+
+class Tournament {
+    +int Id
+    +string GameType
+    +int Type
+    +DateTime StartDate
+    +int UserId
+    +User CreatedBy
+}
+Tournament "1" o--> "many" Match 
+Tournament "many" o--> "1" User 
+
+class Team {
+    +int Id
+    +string TeamName
+}
+Team "1" o--> "many" Player
+
+class Player {
+    +int Id
+    +string FirstName
+    +string LastName
+    +int TeamId
+    +Team Team
+}
+
+class Match {
+    +int Id
+    +int Round
+    +int TournamentId
+    +Tournament Tournament
+}
+
+class MatchTeamData {
+    +int Id
+    +int TeamId
+    +Team Team
+    +int MatchId
+    +Match Match
+    +int Score
+}
+MatchTeamData "many" o--> "1" Match
+MatchTeamData "many" o--> "1" Team
+
+'****************'
+'* Repositories *'
+'****************'
+
+interface IUserRepository {
+    +IEnumerable<UserDto> GetAll() 
+    +UserDto GetById(int id)
+    +UserDto GetByUsername(string username)
+    +UserDto VerifyLogin(string username, string PasswordHash)
+    +UserDto Create(UserDto user)
+    +UserDto Update(UserDto userChanges)
+    +UserDto Delete(int id)
+}
+User <--* UserRepository
+UserDto <-- IUserRepository : has
+
+class UserRepository {
+    -DbContext _context
+}
+IUserRepository <|.. UserRepository : implements
+IUserRepository ..> IHashingService : Dependency
+IUserRepository ..> ISaltService : Dependency
+
+interface ITournamentRepository {
+    +IEnumerable<TournamentDto> GetAll() 
+    +TournamentDto GetById(int id)
+    +TournamentDto Create(TournamentDto Tournament)
+    +TournamentDto Update(TournamentDto TournamentChanges)
+    +TournamentDto Delete(int id)
+}
+Tournament <--* TournamentRepository
+TournamentDto <-- ITournamentRepository : has
+
+class TournamentRepository {
+    -DbContext _context
+}
+ITournamentRepository <|.. TournamentRepository : implements
 @enduml
