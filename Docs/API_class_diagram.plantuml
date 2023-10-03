@@ -22,6 +22,29 @@ class TokenDto {
     +int ExpiresIn
 }
 
+class TournamentDto {
+    +int Id
+    +int Type
+    +string GameType
+    +DateTime StartDate
+    +User CreatedBy
+    +IEnumerable<MatchDto> Matches
+}
+TournamentDto "1" o-> "many" MatchDto
+
+class MatchDto {
+    +int Id
+    +int Round
+    +IEnumerable<TeamDto> Teams
+}
+MatchDto "1" o-> "many" TeamDto
+
+class TeamDto {
+    +int Id
+    +string TeamName
+    +int Score
+    +IEnumerable<PlayerDto> Players
+}
 
 '***************'
 '* Controllers *'
@@ -46,6 +69,17 @@ class AuthController {
 AuthController ..> IHashingService : Dependency
 AuthController ..> ITokenService : Dependency
 TokenDto <-- AuthController : Uses
+
+class TournamentController {
+    -ITournamentRepository _tournamentRepository
+    +Task<ActionResult<IEnumerable<TournamentDto>>> Get()
+    +Task<ActionResult<TournamentDto>> GetById(int id)
+    +Task<ActionResult> Create(TournamentDto dto)
+    +Task<ActionResult> Edit(TournamentDto dtoChanges)
+    +Task<ActionResult> Delete(int id)
+}
+TournamentController ....> ITournamentRepository : Dependency
+TournamentDto <-- TournamentController : Uses 
 
 '************'
 '* Services *'
@@ -75,9 +109,9 @@ interface "ITokenService" as ITokenService {
 UserDto <--- ITokenService
 
 class TokenProcessor {
-    +Token BuildNewToken()
+    +TokenDto BuildNewToken()
 }
-TokenService --> Token : uses
+TokenDto <-- TokenProcessor
 ITokenService <|.. TokenProcessor : implements
 
 
@@ -149,7 +183,7 @@ interface IUserRepository {
     +UserDto Delete(int id)
 }
 User <--* UserRepository
-UserDto <-- IUserRepository : has
+UserDto <-- IUserRepository : Uses
 
 class UserRepository {
     -DbContext _context
@@ -165,8 +199,8 @@ interface ITournamentRepository {
     +TournamentDto Update(TournamentDto TournamentChanges)
     +TournamentDto Delete(int id)
 }
-Tournament <--* TournamentRepository
-TournamentDto <-- ITournamentRepository : has
+Tournament <--* ITournamentRepository
+TournamentDto <-- ITournamentRepository : Uses
 
 class TournamentRepository {
     -DbContext _context
