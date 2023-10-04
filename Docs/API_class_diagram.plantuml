@@ -4,16 +4,19 @@
 '* DTO's *'
 '*********'
 
-class RoleDto {
-    +int Id
-    +string Name
+class LoginDto {
+    +string Username
+    +string Password
+}
+
+class RegisterDto {
+    +string Username
+    +string Password
 }
 
 class UserDto {
     +int Id
     +string Username
-    +bool CookieAccept
-    +IEnumerable<RoleDto> Roles
 }
 UserDto "1" o-> "many" RoleDto
 
@@ -22,22 +25,30 @@ class TokenDto {
     +int ExpiresIn
 }
 
-class TournamentDto {
-    +int Id
-    +int Type
+class CreateTournamentDto {
+    +string Type
     +string GameType
     +DateTime StartDate
-    +User CreatedBy
-    +IEnumerable<MatchDto> Matches
+    +bool RandomnizeTeams
+    +IEnumerable<Teams> Teams
 }
-TournamentDto "1" o-> "many" MatchDto
 
-class MatchDto {
+class TournamentDto {
+    +int Id
+    +string Type
+    +string GameType
+    +DateTime StartDate
+    +UserDto CreatedBy
+    +IEnumerable<MatchupDto> Matchups
+}
+TournamentDto "1" o-> "many" MatchupDto
+
+class MatchupDto {
     +int Id
     +int Round
     +IEnumerable<TeamDto> Teams
 }
-MatchDto "1" o-> "many" TeamDto
+MatchupDto "1" o-> "many" TeamDto
 
 class TeamDto {
     +int Id
@@ -45,16 +56,23 @@ class TeamDto {
     +int Score
     +IEnumerable<PlayerDto> Players
 }
+TeamDto "1" o-> "many" PlayerDto
+
+class PlayerDto {
+    +int Id
+    +string FirstName
+    +string LastName
+}
 
 '***************'
 '* Controllers *'
 '***************'
 class UserController {
     -IUserRepository _userRepository
-    +ActionResult<IEnumerable<UserDto>> Get()
-    +ActionResult<UserDto> Get(int id)
-    +ActionResult<UserDto> Update(int id, UserDto dto)
-    +ActionResult<UserDto> Delete(int id)  
+    +Task<ActionResult<IEnumerable<UserDto>>> Get()
+    +Task<ActionResult<UserDto>> Get(int id)
+    +Task<ActionResult<UserDto>> Update(int id, UserDto dto)
+    +Task<ActionResult<UserDto>> Delete(int id)  
 }
 UserDto <-- UserController : Uses
 UserController ....> IUserRepository : Dependency
@@ -62,30 +80,37 @@ UserController ....> IUserRepository : Dependency
 class AuthController {
     -IHashingService _hashService
     -ITokenService _tokenService
-    +ActionResult<TokenDto> Login(LoginDto loginDetails)
-    +ActionResult> Register(LoginDto registerDetails)
-    +ActionResult<bool> ValidateToken(TokenDto token)
+    +Task<ActionResult<TokenDto>> Login(LoginDto loginDetails)
+    +Task<ActionResult>> Register(RegisterDto registerDetails)
+    +Task<ActionResult<bool>> ValidateToken(TokenDto token)
 }
 AuthController ..> IHashingService : Dependency
 AuthController ..> ITokenService : Dependency
 TokenDto <-- AuthController : Uses
+LoginDto <-- AuthController : Uses
+RegisterDto <-- AuthController : Uses
 
 class TournamentController {
     -ITournamentRepository _tournamentRepository
+    -IMatchupBuilder _matchupBuilder
+    +Task<ActionResult<IEnumerable<TournamentType>>> GetTypes()
     +Task<ActionResult<IEnumerable<TournamentDto>>> Get()
     +Task<ActionResult<TournamentDto>> GetById(int id)
-    +Task<ActionResult> Create(TournamentDto dto)
+    +Task<ActionResult> Create(CreateTournamentDto dto)
     +Task<ActionResult> Edit(TournamentDto dtoChanges)
     +Task<ActionResult> Delete(int id)
 }
 TournamentController ....> ITournamentRepository : Dependency
-TournamentDto <-- TournamentController : Uses 
+TournamentController ..> IMatchupBuilder : Dependency
+TournamentDto <-- TournamentController : Uses
+CreateTournamentDto <-- TournamentController : Uses 
+TournamentController ----> TournamentType : Uses
 
 '************'
 '* Services *'
 '************'
 
-interface "IHashingservice" as IHashingService {
+interface IHashingService {
     +string HashPassword(string password, string salt)
 }
 
@@ -94,7 +119,7 @@ class HashProcessor {
 IHashingService <|.. HashProcessor : implements
 
 
-interface "ISaltservice" as ISaltService {
+interface ISaltService {
     +string GenerateSalt()
 }
 
@@ -103,8 +128,8 @@ class SaltProcessor {
 ISaltService <|.. SaltProcessor : implements
 
 
-interface "ITokenService" as ITokenService {
-    +Token BuildNewToken(UserDto user)
+interface ITokenService {
+    +TokenDto BuildNewToken(UserDto user)
 }
 UserDto <--- ITokenService
 
@@ -114,10 +139,27 @@ class TokenProcessor {
 TokenDto <-- TokenProcessor
 ITokenService <|.. TokenProcessor : implements
 
+interface IMatchupBuilder {
+    +IEnumerable<TeamDto> BuildRandomTeams(IEnumerable<PlayerDto> players)
+    +IEnumerable<MatchupDto> BuildMatchups(TournamentType type, IEnumerable<TeamDto> teams)
+}
+
+abstract class TournamentFactory {
+    +{abstract}TournamentDto Create()
+} 
+
+class KnockoutTournamentFactory {
+    +TournamentDto Create()
+}
+TournamentFactory <|-- KnockoutTournamentFactory : inherits
 
 '**********'
 '* Models *'
 '**********'
+
+enum TournamentType {
+    Knockout
+}
 
 class User {
     +int Id
@@ -127,19 +169,22 @@ class User {
 }
 
 class Tournament {
-    +int Id
+    +TournamentType Id
     +string GameType
     +int Type
     +DateTime StartDate
     +int UserId
     +User CreatedBy
+    +IEnumerable<Matchup> Matches
 }
-Tournament "1" o--> "many" Match 
-Tournament "many" o--> "1" User 
+Tournament o--> TournamentType
+Tournament "1" o--> "many" Matchup 
+Tournament "many" o--> "1" User
 
 class Team {
     +int Id
     +string TeamName
+    +IEnumerable<Player> Players
 }
 Team "1" o--> "many" Player
 
@@ -151,36 +196,37 @@ class Player {
     +Team Team
 }
 
-class Match {
+class Matchup {
     +int Id
     +int Round
     +int TournamentId
     +Tournament Tournament
+    +IEnumerable<MatchupTeamDate> Matchups
 }
 
-class MatchTeamData {
+class MatchupTeamData {
     +int Id
     +int TeamId
     +Team Team
     +int MatchId
-    +Match Match
+    +Matchup Matchup
     +int Score
 }
-MatchTeamData "many" o--> "1" Match
-MatchTeamData "many" o--> "1" Team
+MatchupTeamData "many" o--> "1" Matchup
+MatchupTeamData "many" o--> "1" Team
 
 '****************'
 '* Repositories *'
 '****************'
 
 interface IUserRepository {
-    +IEnumerable<UserDto> GetAll() 
-    +UserDto GetById(int id)
-    +UserDto GetByUsername(string username)
-    +UserDto VerifyLogin(string username, string PasswordHash)
-    +UserDto Create(UserDto user)
-    +UserDto Update(UserDto userChanges)
-    +UserDto Delete(int id)
+    +Task<IEnumerable<UserDto>> GetAll() 
+    +Task<UserDto?> GetById(int id)
+    +Task<UserDto?> GetByUsername(string username)
+    +Task<bool> VerifyLogin(string username, string PasswordHash)
+    +Task<UserDto> Create(UserDto user)
+    +Task<UserDto> Update(UserDto userChanges)
+    +Task<UserDto> Delete(int id)
 }
 User <--* UserRepository
 UserDto <-- IUserRepository : Uses
@@ -193,11 +239,11 @@ IUserRepository ..> IHashingService : Dependency
 IUserRepository ..> ISaltService : Dependency
 
 interface ITournamentRepository {
-    +IEnumerable<TournamentDto> GetAll() 
-    +TournamentDto GetById(int id)
-    +TournamentDto Create(TournamentDto Tournament)
-    +TournamentDto Update(TournamentDto TournamentChanges)
-    +TournamentDto Delete(int id)
+    +Task<IEnumerable<TournamentDto>> GetAll() 
+    +Task<TournamentDto?> GetById(int id)
+    +Task<TournamentDto> Create(TournamentDto Tournament)
+    +Task<TournamentDto> Update(TournamentDto TournamentChanges)
+    +Task<TournamentDto> Delete(int id)
 }
 Tournament <--* ITournamentRepository
 TournamentDto <-- ITournamentRepository : Uses
