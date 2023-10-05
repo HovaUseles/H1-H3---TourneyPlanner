@@ -7,8 +7,8 @@ namespace TourneyPlanner.API.Repositories
         public Task<IEnumerable<UserDto>> GetAll();
         public Task<UserDto> GetById(int id);
         public Task<UserDto?> GetByUsername(string username);
-        public Task<bool> VerifyLogin(string username, string password);
-        public Task Create();
+        public Task<bool> VerifyLogin(LoginDto loginDto);
+        public Task Create(RegisterDto registerDto);
         public Task Update();
         public Task Delete();
     }

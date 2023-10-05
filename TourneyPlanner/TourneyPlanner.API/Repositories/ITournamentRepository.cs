@@ -6,8 +6,8 @@ namespace TourneyPlanner.API.Repositories
     {
         public Task<IEnumerable<TournamentDto>> GetAll();
         public Task<TournamentDto> GetById(int id);
-        public Task Create();
-        public Task Update();
-        public Task Delete();
+        public Task Create(CreateTournamentDto dto);
+        public Task Update(int id, CreateTournamentDto dtoChanges);
+        public Task Delete(int id);
     }
 }
