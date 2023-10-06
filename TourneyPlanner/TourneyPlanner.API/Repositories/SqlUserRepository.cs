@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Models;
 using TourneyPlanner.API.Services;

@@ -24,10 +24,15 @@ namespace TourneyPlanner.API.Controllers
         public async Task<ActionResult> FollowMatchup(int matchupId)
         {
             int userId = 1; // TODO: Get From JWT Token
-            var user = await _userRepository.GetById(userId);
+            UserDto? user = await _userRepository.GetById(userId);
+
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
 
             MatchupDto matchupDto =  await _matchupRepository.GetById(matchupId);
-            await _matchupRepository.FollowMatchup(matchupDto, user);
+            await _matchupRepository.FollowMatchup(matchupDto, (UserDto)user);
 
             return Ok();
         }

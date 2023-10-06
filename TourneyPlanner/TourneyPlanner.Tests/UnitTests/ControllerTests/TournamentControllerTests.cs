@@ -27,12 +27,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             {
                 Name = "Tournament 1",
                 StartDate = DateTime.Parse("17/10/2022"),
-                GameType = "Paddle",
-                Type = new TournamentType
-                {
-                    Id = 1,
-                    Name = "Knockout"
-                },
+                GameTypeId = 1,
+                TournamentTypeId = 1,
                 RandomnizeTeams = false,
                 Teams = new[] {
                     new TeamDto
