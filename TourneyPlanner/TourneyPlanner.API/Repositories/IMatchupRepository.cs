@@ -6,6 +6,6 @@ namespace TourneyPlanner.API.Repositories
     {
 
         public Task FollowMatchup(MatchupDto matchup, UserDto user);
-        public Task<MatchupDto> GetById(int id);
+        public Task<MatchupDto?> GetById(int id);
     }
 }
