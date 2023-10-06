@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Moq;
 using TourneyPlanner.API.Controllers;
 using TourneyPlanner.API.DTOs;
@@ -49,7 +48,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
                 var mock = GetUserRepoMock();
@@ -68,20 +67,20 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
                 UserDto? userNotFound = null;
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userNotFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userNotFound);
                 var sut = GetSut(mock);
 
                 // Act
                 var result = await sut.Register(dto);
 
                 // Assert
-                mock.Verify(x => x.GetByUsername(It.IsAny<string>()), Times.Once());
+                mock.Verify(x => x.GetByEmail(It.IsAny<string>()), Times.Once());
             }
 
             [Fact]
@@ -90,17 +89,17 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
                 UserDto userFound = new UserDto()
                 {
                     Id = 1,
-                    Email = dto.Username
+                    Email = dto.Email
                 };
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userFound);
                 var sut = GetSut(mock);
 
                 // Act
@@ -116,13 +115,13 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
                 UserDto? userNotFound = null;
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userNotFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userNotFound);
                 var sut = GetSut(mock);
 
                 // Act
@@ -151,13 +150,13 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = password
                 };
                 UserDto? userNotFound = null;
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userNotFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userNotFound);
                 var sut = GetSut(mock);
 
                 // Act
@@ -186,17 +185,17 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Email = dto.Username
+                    Email = dto.Email
                 };
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userFound);
                 mock.Setup(x => x.VerifyLogin(dto)).ReturnsAsync(true);
                 var sut = GetSut(mock);
 
@@ -213,25 +212,25 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
 
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Email = dto.Username
+                    Email = dto.Email
                 };
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userFound);
                 var sut = GetSut(mock);
 
                 // Act
                 var result = await sut.Login(dto);
 
                 // Assert
-                mock.Verify(x => x.GetByUsername(It.IsAny<string>()), Times.Once());
+                mock.Verify(x => x.GetByEmail(It.IsAny<string>()), Times.Once());
             }
 
             [Fact]
@@ -240,14 +239,14 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
 
                 UserDto? userNotFound = null;
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userNotFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userNotFound);
                 var sut = GetSut(mock);
 
                 // Act
@@ -263,18 +262,18 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
 
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Email = dto.Username
+                    Email = dto.Email
                 };
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userFound);
                 mock.Setup(x => x.VerifyLogin(dto)).ReturnsAsync(true);
                 var sut = GetSut(mock);
 
@@ -293,18 +292,18 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
 
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Email = dto.Username
+                    Email = dto.Email
                 };
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userFound);
                 var sut = GetSut(mock);
 
                 // Act
@@ -320,18 +319,18 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange 
                 var dto = new AuthHandlerDto()
                 {
-                    Username = "NewUser",
+                    Email = "NewUser",
                     Password = "NewPassword1"
                 };
 
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Email = dto.Username
+                    Email = dto.Email
                 };
 
                 var mock = GetUserRepoMock();
-                mock.Setup(x => x.GetByUsername(It.IsAny<string>())).ReturnsAsync(userFound);
+                mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userFound);
                 mock.Setup(x => x.VerifyLogin(dto)).ReturnsAsync(false);
                 var sut = GetSut(mock);
 

@@ -1,4 +1,6 @@
-﻿using TourneyPlanner.API.DTOs;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Models;
 using TourneyPlanner.API.Services;
 
@@ -21,51 +23,104 @@ namespace TourneyPlanner.API.Repositories
             _saltService = saltService;
         }
 
-        public Task Create(AuthHandlerDto registerDto)
+        public async Task Create(AuthHandlerDto registerDto)
         {
+            User? usernameExist = _context.Users.FirstOrDefault(u => u.Email == registerDto.Email);
+            if(usernameExist != null)
+            {
+                throw new ArgumentException("Email already exist", nameof(registerDto.Email));
+            }
+
             string salt = _saltService.GenerateSalt();
             string passwordHash = _hashingService.HashPassword(registerDto.Password, salt);
 
-
             User user = new User()
             {
-                Email = registerDto.Username,
-
+                Email = registerDto.Email,
+                PasswordHash = passwordHash,
+                Salt = salt
             };
 
+            _context.Add( user );
 
-
-            throw new NotImplementedException();
+            return;
         }
 
-        public Task Delete()
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            User? user = _context.Users.FirstOrDefault(u => u.Id == id);
+
+            if(user == null)
+            {
+                throw new ArgumentException($"No user exist with id: {id}", nameof(id));
+            }
+
+            _context.Users.Remove(user);
+
+            return;
         }
 
-        public Task<IEnumerable<UserDto>> GetAll()
+        public async Task<IEnumerable<UserDto>> GetAll()
         {
-            throw new NotImplementedException();
+            List<User> users = await _context.Users.ToListAsync();
+            return users.ConvertAll<UserDto>(u =>
+            {
+                return new UserDto {
+                    Id = u.Id,
+                    Email = u.Email
+                };
+            });
         }
 
-        public Task<UserDto> GetById(int id)
+        public async Task<UserDto?> GetById(int id)
         {
-            throw new NotImplementedException();
+            User? user = await _context.Users.FindAsync(id);
+
+            if(user == null)
+            {
+                return null;
+            }
+
+            return new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
         }
 
-        public Task<UserDto?> GetByUsername(string username)
+        public async Task<UserDto?> GetByEmail(string email)
         {
-            throw new NotImplementedException();
-        }
+            User? user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
 
-        public Task Update()
-        {
-            throw new NotImplementedException();
-        }
+            if (user == null)
+            {
+                return null;
+            }
 
-        public Task<bool> VerifyLogin(AuthHandlerDto loginDto)
+            return new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
+        }
+        
+        public async Task<bool> VerifyLogin(AuthHandlerDto loginDto)
         {
-            throw new NotImplementedException();
+            User? user = await _context.Users.Where(u => u.Email == loginDto.Email).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            string passwordHash = _hashingService.HashPassword(loginDto.Password, user.Salt);
+
+            if(user.PasswordHash == passwordHash) 
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

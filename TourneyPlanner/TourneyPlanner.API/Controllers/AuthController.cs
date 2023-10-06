@@ -27,7 +27,7 @@ namespace TourneyPlanner.API.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult> Register(AuthHandlerDto dto)
         {
-            if(string.IsNullOrWhiteSpace(dto.Username)) 
+            if(string.IsNullOrWhiteSpace(dto.Email)) 
             {
                 return BadRequest("Username cannot be null");
             }
@@ -36,7 +36,7 @@ namespace TourneyPlanner.API.Controllers
                 return BadRequest("Password cannot be null");
             } 
 
-            UserDto? userExist = await _userRepository.GetByUsername(dto.Username);
+            UserDto? userExist = await _userRepository.GetByEmail(dto.Email);
 
             if(userExist != null)
             {
@@ -62,25 +62,25 @@ namespace TourneyPlanner.API.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<TokenDto>> Login(AuthHandlerDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Username))
+            if (string.IsNullOrWhiteSpace(dto.Email))
             {
-                return BadRequest("Username cannot be null");
+                return BadRequest("Email cannot be null");
             }
             if (string.IsNullOrWhiteSpace(dto.Password))
             {
                 return BadRequest("Password cannot be null");
             }
 
-            UserDto? user = await _userRepository.GetByUsername(dto.Username);
+            UserDto? user = await _userRepository.GetByEmail(dto.Email);
 
             if(user == null)
             {
-                return BadRequest("Username or password was invalid");
+                return BadRequest("Email or password was invalid");
             }
 
             if(await _userRepository.VerifyLogin(dto) == false)
             {
-                return BadRequest("Username or password was invalid");
+                return BadRequest("Email or password was invalid");
             }
 
             TokenDto token = _tokenService.BuildNewToken((UserDto)user);
