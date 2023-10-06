@@ -21,7 +21,7 @@ namespace TourneyPlanner.API.Repositories
             _saltService = saltService;
         }
 
-        public Task Create(RegisterDto registerDto)
+        public Task Create(AuthHandlerDto registerDto)
         {
             string salt = _saltService.GenerateSalt();
             string passwordHash = _hashingService.HashPassword(registerDto.Password, salt);
@@ -63,7 +63,7 @@ namespace TourneyPlanner.API.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> VerifyLogin(LoginDto loginDto)
+        public Task<bool> VerifyLogin(AuthHandlerDto loginDto)
         {
             throw new NotImplementedException();
         }

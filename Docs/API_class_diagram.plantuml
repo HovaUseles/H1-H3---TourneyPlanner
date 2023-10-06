@@ -4,12 +4,7 @@
 '* DTO's *'
 '*********'
 
-class LoginDto {
-    +string Username
-    +string Password
-}
-
-class RegisterDto {
+class AuthHandlerDto {
     +string Username
     +string Password
 }
@@ -26,6 +21,7 @@ class TokenDto {
 }
 
 class CreateTournamentDto {
+    +string Name
     +string Type
     +int GameTypeId
     +DateTime StartDate
@@ -35,6 +31,7 @@ class CreateTournamentDto {
 
 class TournamentDto {
     +int Id
+    +string Name
     +string Type
     +GameTypeDto GameType
     +DateTime StartDate
@@ -90,14 +87,14 @@ UserController ....> IUserRepository : Dependency
 class AuthController {
     -IHashingService _hashService
     -ITokenService _tokenService
-    +Task<ActionResult<TokenDto>> Login(LoginDto loginDetails)
-    +Task<ActionResult>> Register(RegisterDto registerDetails)
+    +Task<ActionResult<TokenDto>> Login(AuthHandlerDto loginDetails)
+    +Task<ActionResult>> Register(AuthHandlerDto registerDetails)
     +Task<ActionResult<bool>> ValidateToken(TokenDto token)
 }
 AuthController ..> ITokenService : Dependency
 TokenDto <-- AuthController : Uses
-LoginDto <-- AuthController : Uses
-RegisterDto <-- AuthController : Uses
+AuthHandlerDto <-- AuthController : Uses
+AuthHandlerDto <-- AuthController : Uses
 
 class TournamentController {
     -ITournamentRepository _tournamentRepository
@@ -114,6 +111,14 @@ TournamentController ..> IMatchupBuilder : Dependency
 TournamentDto <-- TournamentController : Uses
 CreateTournamentDto <-- TournamentController : Uses 
 TournamentController ----> TournamentType : Uses
+
+class MatchupController {
+    -IMatchupRepository _matchupRepository
+    -IUserRepository _userRepository
+    +Task<ActionResult> FollowMatchup(int matchupId)
+}
+MatchupController ....> IMatchupRepository : Dependency
+MatchupController ....> IUserRepository : Dependency
 
 '************'
 '* Services *'
@@ -271,4 +276,17 @@ class TournamentRepository {
     -DbContext _context
 }
 ITournamentRepository <|.. TournamentRepository : implements
+
+interface IMatchupRepository {
+    +Task FollowMatchup(MatchupDto matchup, UserDto user)
+    +Task<MatchupDto?> GetById(int id)
+}
+MatchupDto <-- ITournamentRepository : Uses
+UserDto <-- ITournamentRepository : Uses
+
+class MatchupRepository {
+    -DbContext _context
+}
+IMatchupRepository <|.. MatchupRepository : implements
+
 @enduml

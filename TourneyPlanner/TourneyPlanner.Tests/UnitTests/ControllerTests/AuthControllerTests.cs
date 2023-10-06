@@ -47,7 +47,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturn200_WhenSucceded()
             {
                 // Arrange 
-                var dto = new RegisterDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -66,7 +66,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldCallUserRepository_WhenSucceded()
             {
                 // Arrange 
-                var dto = new RegisterDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -88,7 +88,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturn400_WhenUsernameAlreadyExists()
             {
                 // Arrange 
-                var dto = new RegisterDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -96,7 +96,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 UserDto userFound = new UserDto()
                 {
                     Id = 1,
-                    Username = dto.Username
+                    Email = dto.Username
                 };
 
                 var mock = GetUserRepoMock();
@@ -114,7 +114,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldCallUserRepositoryCreate_WhenUsernameUnique()
             {
                 // Arrange 
-                var dto = new RegisterDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -129,7 +129,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 var result = await sut.Register(dto);
 
                 // Assert
-                mock.Verify(x => x.Create(It.IsAny<RegisterDto>()), Times.Once());
+                mock.Verify(x => x.Create(It.IsAny<AuthHandlerDto>()), Times.Once());
             }
 
             [Theory]
@@ -149,7 +149,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturnExpected_WhenPasswordIsNotStrongEnough(string password, bool expectSuccess)
             {
                 // Arrange 
-                var dto = new RegisterDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = password
@@ -184,7 +184,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturn200_WhenSucceded()
             {
                 // Arrange 
-                var dto = new LoginDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -192,7 +192,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Username = dto.Username
+                    Email = dto.Username
                 };
 
                 var mock = GetUserRepoMock();
@@ -211,7 +211,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldCallUserRepository_WhenSucceded()
             {
                 // Arrange 
-                var dto = new LoginDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -220,7 +220,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Username = dto.Username
+                    Email = dto.Username
                 };
 
                 var mock = GetUserRepoMock();
@@ -238,7 +238,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturn400_WhenUserDoesNotExists()
             {
                 // Arrange 
-                var dto = new LoginDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -261,7 +261,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturnToken_WhenSucceded()
             {
                 // Arrange 
-                var dto = new LoginDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -270,7 +270,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Username = dto.Username
+                    Email = dto.Username
                 };
 
                 var mock = GetUserRepoMock();
@@ -291,7 +291,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldCallUserRepository_ToValidateLogin()
             {
                 // Arrange 
-                var dto = new LoginDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -300,7 +300,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Username = dto.Username
+                    Email = dto.Username
                 };
 
                 var mock = GetUserRepoMock();
@@ -318,7 +318,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             public async Task ShouldReturn400_WhenPasswordIsInvalid()
             {
                 // Arrange 
-                var dto = new LoginDto()
+                var dto = new AuthHandlerDto()
                 {
                     Username = "NewUser",
                     Password = "NewPassword1"
@@ -327,7 +327,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 UserDto? userFound = new UserDto
                 {
                     Id = 1,
-                    Username = dto.Username
+                    Email = dto.Username
                 };
 
                 var mock = GetUserRepoMock();

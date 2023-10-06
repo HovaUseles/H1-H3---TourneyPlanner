@@ -1,1 +1,1 @@
-﻿Scaffold-DbContext 'Name=ConnectionStrings:TourneyPlanner' Microsoft.EntityFrameworkCore.SqlServer -ContextDir Models -OutputDir Models -Force
+﻿Scaffold-DbContext 'Server=(localdb)\MSSQLLocalDB;Database=TourneyPlannerDev;' Microsoft.EntityFrameworkCore.SqlServer -ContextDir Models -OutputDir Models -Force

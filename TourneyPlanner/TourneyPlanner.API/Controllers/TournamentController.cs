@@ -26,18 +26,22 @@ namespace TourneyPlanner.API.Controllers
 
         // GET api/<TournamentController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TournamentDto?>> GetById(int id)
+        public async Task<ActionResult<TournamentDto>> GetById(int id)
         {
-            return Ok(await _tournamentRepository.GetById(id));
-
+            TournamentDto? tournament = await _tournamentRepository.GetById(id);
+            if (tournament == null)
+            {
+                return NotFound($"A tournament with Id: {id} does not exist. No record was deleted.");
+            }
+            return Ok(tournament);
         }
 
         // POST api/<TournamentController>
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] CreateTournamentDto dto)
+        public async Task<ActionResult<TournamentDto>> Create([FromBody] CreateTournamentDto dto)
         {
-            await _tournamentRepository.Create(dto);
-            return Ok();
+            TournamentDto createdTournament = await _tournamentRepository.Create(dto);
+            return Created($"api/Tournament/{createdTournament.Id}", createdTournament);
         }
 
         // PUT api/<TournamentController>/5
@@ -45,15 +49,20 @@ namespace TourneyPlanner.API.Controllers
         public async Task<ActionResult> Edit(int id, [FromBody] CreateTournamentDto dtoChanges)
         {
             await _tournamentRepository.Update(id, dtoChanges);
-            return Ok();
+            return NoContent();
         }
 
         // DELETE api/<TournamentController>/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
+            if(await _tournamentRepository.GetById(id) == null)
+            {
+                return NotFound($"A tournament with Id: {id} does not exist. No record was deleted.");
+            }
+
             await _tournamentRepository.Delete(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

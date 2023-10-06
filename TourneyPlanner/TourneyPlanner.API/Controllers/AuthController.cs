@@ -25,7 +25,7 @@ namespace TourneyPlanner.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> Register(RegisterDto dto)
+        public async Task<ActionResult> Register(AuthHandlerDto dto)
         {
             if(string.IsNullOrWhiteSpace(dto.Username)) 
             {
@@ -60,7 +60,7 @@ namespace TourneyPlanner.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<TokenDto>> Login(LoginDto dto)
+        public async Task<ActionResult<TokenDto>> Login(AuthHandlerDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Username))
             {

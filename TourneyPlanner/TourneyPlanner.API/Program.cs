@@ -15,11 +15,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
 
-//builder.Services.AddDbContext<TourneyPlannerDevContext>(options =>
-//{
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("TourneyPlanner"));
-//    options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddFilter(level => level >= LogLevel.Warning)));
-//});
+builder.Services.AddDbContext<TourneyPlannerDevContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TourneyPlanner"));
+    options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddFilter(level => level >= LogLevel.Warning)));
+});
 
 var app = builder.Build();
 
