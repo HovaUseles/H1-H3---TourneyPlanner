@@ -15,6 +15,8 @@ public partial class TourneyPlannerDevContext : DbContext
     {
     }
 
+    public virtual DbSet<FavoritMatchup> FavoritMatchups { get; set; }
+
     public virtual DbSet<GameType> GameTypes { get; set; }
 
     public virtual DbSet<Matchup> Matchups { get; set; }
@@ -33,13 +35,32 @@ public partial class TourneyPlannerDevContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=TourneyPlannerDev;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true");
+        => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=TourneyPlannerDev;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<FavoritMatchup>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FavoritM__3214EC07E9748BFD");
+
+            entity.ToTable("FavoritMatchup");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.Matchup).WithMany(p => p.FavoritMatchups)
+                .HasForeignKey(d => d.MatchupId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FavoritMa__Match__4D94879B");
+
+            entity.HasOne(d => d.User).WithMany(p => p.FavoritMatchups)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FavoritMa__UserI__4E88ABD4");
+        });
+
         modelBuilder.Entity<GameType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GameType__B5BCC1F62BC4D9C5");
+            entity.HasKey(e => e.Id).HasName("PK__GameType__3214EC079EC4722B");
 
             entity.ToTable("GameType");
 
@@ -51,140 +72,130 @@ public partial class TourneyPlannerDevContext : DbContext
 
         modelBuilder.Entity<Matchup>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Matchup__DE3C356933C31D8F");
+            entity.HasKey(e => e.Id).HasName("PK__Matchup__3214EC078DA3DA6F");
 
             entity.ToTable("Matchup");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("MatchupID");
-            entity.Property(e => e.TourneyId).HasColumnName("TourneyID");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.StartDateTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.NextMatchup).WithMany(p => p.InverseNextMatchup)
                 .HasForeignKey(d => d.NextMatchupId)
-                .HasConstraintName("FK__Matchup__NextMat__2F10007B");
+                .HasConstraintName("FK__Matchup__NextMat__412EB0B6");
 
-            entity.HasOne(d => d.Tourney).WithMany(p => p.Matchups)
-                .HasForeignKey(d => d.TourneyId)
+            entity.HasOne(d => d.Tournament).WithMany(p => p.Matchups)
+                .HasForeignKey(d => d.TournamentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Matchup__Tourney__300424B4");
+                .HasConstraintName("FK__Matchup__Tournam__4222D4EF");
         });
 
         modelBuilder.Entity<MatchupTeam>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MatchupT__4C3709675B117F97");
+            entity.HasKey(e => e.Id).HasName("PK__MatchupT__3214EC07DC389E4A");
 
             entity.ToTable("MatchupTeam");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("MatchupTeamID");
-            entity.Property(e => e.MatchupId).HasColumnName("MatchupID");
-            entity.Property(e => e.TeamId).HasColumnName("TeamID");
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
             entity.HasOne(d => d.Matchup).WithMany(p => p.MatchupTeams)
                 .HasForeignKey(d => d.MatchupId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MatchupTe__Match__38996AB5");
+                .HasConstraintName("FK__MatchupTe__Match__4AB81AF0");
 
             entity.HasOne(d => d.Team).WithMany(p => p.MatchupTeams)
                 .HasForeignKey(d => d.TeamId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MatchupTe__TeamI__37A5467C");
+                .HasConstraintName("FK__MatchupTe__TeamI__49C3F6B7");
         });
 
         modelBuilder.Entity<Player>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Player__4A4E74A8747A6F3F");
+            entity.HasKey(e => e.Id).HasName("PK__Player__3214EC073E1A5FE2");
 
             entity.ToTable("Player");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("PlayerID");
+            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.FirstName)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.LastName)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.TeamId).HasColumnName("TeamID");
 
             entity.HasOne(d => d.Team).WithMany(p => p.Players)
                 .HasForeignKey(d => d.TeamId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Player__TeamID__34C8D9D1");
+                .HasConstraintName("FK__Player__TeamId__46E78A0C");
         });
 
         modelBuilder.Entity<Team>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Team__123AE7B9200EF20B");
+            entity.HasKey(e => e.Id).HasName("PK__Team__3214EC07FB70BA78");
 
             entity.ToTable("Team");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("TeamID");
-            entity.Property(e => e.TeamName)
-                .HasMaxLength(30)
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
                 .IsUnicode(false);
         });
 
         modelBuilder.Entity<Tournament>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tourname__420410E7F54B3A87");
+            entity.HasKey(e => e.Id).HasName("PK__Tourname__3214EC071CA8E474");
 
             entity.ToTable("Tournament");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("TourneyID");
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.EndDate).HasColumnType("date");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.StartDate).HasColumnType("date");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.GameType).WithMany(p => p.Tournaments)
                 .HasForeignKey(d => d.GameTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tournamen__GameT__2B3F6F97");
+                .HasConstraintName("FK__Tournamen__GameT__3D5E1FD2");
 
-            entity.HasOne(d => d.Type).WithMany(p => p.Tournaments)
-                .HasForeignKey(d => d.TypeId)
+            entity.HasOne(d => d.TournamentType).WithMany(p => p.Tournaments)
+                .HasForeignKey(d => d.TournamentTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tournamen__TypeI__2C3393D0");
+                .HasConstraintName("FK__Tournamen__Tourn__3E52440B");
 
             entity.HasOne(d => d.User).WithMany(p => p.Tournaments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tournamen__UserI__2A4B4B5E");
+                .HasConstraintName("FK__Tournamen__UserI__3C69FB99");
         });
 
         modelBuilder.Entity<TournamentType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tourname__766E51B8B870BCA1");
+            entity.HasKey(e => e.Id).HasName("PK__Tourname__3214EC07E96930BA");
 
             entity.ToTable("TournamentType");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name)
-                .HasMaxLength(100)
+                .HasMaxLength(50)
                 .IsUnicode(false);
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__1788CCACFDB9BBBE");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC073F6BF9BA");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("UserID");
+            entity.ToTable("User");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.PasswordHash)
-                .HasMaxLength(30)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Salt)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.Email)
-                .HasMaxLength(30)
+                .HasMaxLength(32)
                 .IsUnicode(false);
         });
 

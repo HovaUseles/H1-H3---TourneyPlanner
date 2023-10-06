@@ -13,5 +13,7 @@ public partial class User
 
     public string Salt { get; set; } = null!;
 
+    public virtual ICollection<FavoritMatchup> FavoritMatchups { get; set; } = new List<FavoritMatchup>();
+
     public virtual ICollection<Tournament> Tournaments { get; set; } = new List<Tournament>();
 }

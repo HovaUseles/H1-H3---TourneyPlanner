@@ -7,7 +7,7 @@ public partial class Team
 {
     public int Id { get; set; }
 
-    public string TeamName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public virtual ICollection<MatchupTeam> MatchupTeams { get; set; } = new List<MatchupTeam>();
 
