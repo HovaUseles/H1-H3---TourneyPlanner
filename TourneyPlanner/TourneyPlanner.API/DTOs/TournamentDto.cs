@@ -9,7 +9,7 @@ namespace TourneyPlanner.API.DTOs
     {
         public required int Id { get; init; }
         public required string Name { get; init; }
-        public required TournamentType Type { get; init; }
+        public required string Type { get; init; }
         public required string GameType { get; init; }
         public required DateTime StartDate { get; init; }
         public required UserDto CreatedBy { get; init; }
