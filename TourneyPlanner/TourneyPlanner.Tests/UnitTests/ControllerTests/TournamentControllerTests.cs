@@ -120,7 +120,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                                 teams[0],
                                 teams[1]
                             },
-                            WamId = 1,
+                            NextMatchupId = 1,
                         },
                         new MatchupDto
                         {
@@ -131,7 +131,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                                 teams[2],
                                 teams[3]
                             },
-                            WamId = 1,
+                            NextMatchupId = 1,
                         }
                     }
                 },
@@ -167,7 +167,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                                 teams[3],
                                 teams[0]
                             },
-                            WamId = 1,
+                            NextMatchupId = 1,
                         },
                         new MatchupDto
                         {
@@ -178,7 +178,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                                 teams[2],
                                 teams[1]
                             },
-                            WamId = 4,
+                            NextMatchupId = 4,
                         }
                     }
                 },
