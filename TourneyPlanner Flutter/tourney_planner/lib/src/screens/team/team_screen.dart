@@ -5,6 +5,8 @@ import 'package:tourney_planner/src/models/team.dart';
 class TeamScreen extends StatefulWidget {
   const TeamScreen({super.key});
 
+  static const routeName = '/team';
+
   @override
   State<TeamScreen> createState() => _TeamScreenState();
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:tourney_planner/src/screens/sample_feature/sample_item_list_view.dart';
 import 'package:tourney_planner/src/screens/tournament/tournament_screen.dart';
 
 class LoginScreen extends StatefulWidget {

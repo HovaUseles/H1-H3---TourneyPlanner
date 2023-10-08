@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:tourney_planner/src/locators/setup_locator.dart';
 import 'package:tourney_planner/src/services/firebase_message_service.dart';
 import 'src/app.dart';
 import 'src/controllers/settings_controller.dart';
@@ -8,6 +9,9 @@ import 'src/services/settings_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setupTournamentLocator();
+  setupAuthLocator();
+  setupUserLocator();
   await Firebase.initializeApp();
 
   debugPrint(await getDeviceToken());

@@ -2,18 +2,17 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tourney_planner/src/httpclient/set_http_client.dart';
-import 'package:tourney_planner/src/models/tournament.dart';
+import 'package:tourney_planner/src/models/auth.dart';
 
-class TournamentDataHandler {
+class UserDataHandler {
   final baseUrl = 'https://10.0.2.2:27016/api/Tournament';
   HttpClient httpClient = HttpClient();
 
-  Future<List<TournamentDto>> getTournamentCollection() async {
+  Future<bool> postUserRegistration(AuthDto user) async {
     httpClient = await setHttpClient();
-    HttpClientRequest request =
-        await httpClient.getUrl(Uri.parse(baseUrl))
-          ..headers.contentType =
-              ContentType('application', 'json', charset: 'utf-8');
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(baseUrl))
+      ..headers.contentType =
+          ContentType('application', 'json', charset: 'utf-8');
 
     var response = await request.close();
 
@@ -24,17 +23,10 @@ class TournamentDataHandler {
 
     var responseBody = await response.transform(utf8.decoder).join();
 
-    List<TournamentDto> tempCollection = [];
-
-    for (var item in json.decode(responseBody)) {
-      TournamentDto card = TournamentDto.fromJson(item);
-      tempCollection.add(card);
-    }
-
-    return tempCollection;
+    return bool.parse(responseBody);
   }
 
-    Future<List<TournamentDto>> getMyTournamentCollection(String id) async {
+  Future<bool> postChangePassword(AuthDto user) async {
     var storage = const FlutterSecureStorage();
     String? token = await storage.read(key: "token");
 
@@ -44,11 +36,10 @@ class TournamentDataHandler {
 
     var headers = {"Authorization": "Bearer $token"};
     httpClient = await setHttpClient();
-    HttpClientRequest request =
-        await httpClient.getUrl(Uri.parse('$baseUrl/$id'))
-          ..headers.contentType =
-              ContentType('application', 'json', charset: 'utf-8')
-          ..headers.add(headers.keys.first, headers.values.first);
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(baseUrl))
+      ..headers.contentType =
+          ContentType('application', 'json', charset: 'utf-8')
+      ..headers.add(headers.keys.first, headers.values.first);
 
     var response = await request.close();
 
@@ -59,17 +50,10 @@ class TournamentDataHandler {
 
     var responseBody = await response.transform(utf8.decoder).join();
 
-    List<TournamentDto> tempCollection = [];
-
-    for (var item in json.decode(responseBody)) {
-      TournamentDto card = TournamentDto.fromJson(item);
-      tempCollection.add(card);
-    }
-
-    return tempCollection;
+    return bool.parse(responseBody);
   }
 
-  Future<TournamentDto> postTournament(TournamentDto tournament) async {
+  Future<bool> postChangeEmail(AuthDto user) async {
     var storage = const FlutterSecureStorage();
     String? token = await storage.read(key: "token");
 
@@ -79,11 +63,10 @@ class TournamentDataHandler {
 
     var headers = {"Authorization": "Bearer $token"};
     httpClient = await setHttpClient();
-    HttpClientRequest request =
-        await httpClient.getUrl(Uri.parse(baseUrl))
-          ..headers.contentType =
-              ContentType('application', 'json', charset: 'utf-8')
-          ..headers.add(headers.keys.first, headers.values.first);
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(baseUrl))
+      ..headers.contentType =
+          ContentType('application', 'json', charset: 'utf-8')
+      ..headers.add(headers.keys.first, headers.values.first);
 
     var response = await request.close();
 
@@ -94,8 +77,6 @@ class TournamentDataHandler {
 
     var responseBody = await response.transform(utf8.decoder).join();
 
-    TournamentDto tempCollection = TournamentDto.fromJson(json.decode(responseBody));
-
-    return tempCollection;
+    return bool.parse(responseBody);
   }
 }

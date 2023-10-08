@@ -4,8 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tourney_planner/src/screens/login/login_screen.dart';
 import 'package:tourney_planner/src/screens/utility/slide_animation_route.dart';
 import 'package:tourney_planner/src/screens/tournament/tournament_screen.dart';
-import 'screens/sample_feature/sample_item_details_view.dart';
-import 'screens/sample_feature/sample_item_list_view.dart';
 import 'controllers/settings_controller.dart';
 import 'screens/settings/settings_view.dart';
 
@@ -62,7 +60,7 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
 
-          initialRoute: '/',
+          initialRoute: '/tournament',
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
@@ -75,14 +73,6 @@ class MyApp extends StatelessWidget {
               case SettingsView.routeName:
                 return SlideLeftRoute(
                   widget: SettingsView(controller: settingsController),
-                );
-              case SampleItemListView.routeName:
-                return SlideLeftRoute(
-                  widget: const SampleItemListView(),
-                );
-              case SampleItemDetailsView.routeName:
-                return SlideLeftRoute(
-                  widget: const SampleItemDetailsView(),
                 );
               case TournamentScreen.routeName:
                 return SlideLeftRoute(widget: const TournamentScreen());
