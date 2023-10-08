@@ -1,11 +1,11 @@
 ﻿namespace TourneyPlanner.API.DTOs
 {
     /// <summary>
-    /// Ingoing DTO for logging in as a User
+    /// Ingoing DTO for regsitering a new user
     /// </summary>
-    public record struct LoginDto
+    public record struct AuthHandlerDto
     {
-        public required string Username { get; init; }
+        public required string Email { get; init; }
         public required string Password { get; init; }
     }
 }

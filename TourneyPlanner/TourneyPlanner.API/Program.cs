@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TourneyPlanner.API.DTOs;
+using TourneyPlanner.API.Models;
+using TourneyPlanner.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
+
+builder.Services.AddDbContext<TourneyPlannerDevContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TourneyPlanner"));
+    options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddFilter(level => level >= LogLevel.Warning)));
+});
 
 var app = builder.Build();
 
