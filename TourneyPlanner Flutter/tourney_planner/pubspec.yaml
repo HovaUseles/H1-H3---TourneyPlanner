@@ -10,10 +10,16 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
+  firebase_core: ^2.17.0
+  firebase_messaging: ^14.6.9
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^15.1.2
   flutter_localizations:
     sdk: flutter
+  form_field_validator: ^1.1.0
+  get_it: ^7.6.4
+  graphview: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -28,5 +34,7 @@ flutter:
   generate: true
 
   assets:
-    # Add assets from the images directory to the application.
-    - assets/images/
+    - 'assets/localhost+3-client.p12'
+    - 'assets/localhost+3-key.pem'
+    - 'assets/localhost+3.pem'
+    - 'assets/logo.png'
