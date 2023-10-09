@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Claims } from 'src/app/interfaces/claims';
-import { Login } from 'src/app/interfaces/login';
+import { Auth } from 'src/app/interfaces/auth';
 import { Token } from 'src/app/interfaces/token';
 import { environment } from 'src/environments/environment';
 
@@ -18,7 +17,7 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient) { };
 
-  getToken(login: Login) {
+  getToken(login: Auth) {
     this.httpClient.post<Token>(this.url, login).subscribe(x => {
       this.checkResponse(x);
     });
@@ -29,7 +28,7 @@ export class AuthenticationService {
     this.loggedInSubject$.next(false);
   }
 
-  register(login: Login) {
+  register(login: Auth) {
     this.httpClient.post<Token>(this.url + this.registerEndpoint, login).subscribe(x => {
       this.checkResponse(x);
     });

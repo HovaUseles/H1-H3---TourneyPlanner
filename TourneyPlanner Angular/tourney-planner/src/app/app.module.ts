@@ -8,13 +8,7 @@ import { MatRadioModule } from '@angular/material/radio';
 
 //Angular matrials
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatListModule } from '@angular/material/list';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,7 +26,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -40,7 +33,6 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatSliderModule } from '@angular/material/slider';
 
 // Components
@@ -51,6 +43,10 @@ import { TournamentDetailsComponent } from './components/tournament-details/tour
 import { SettingsComponent } from './components/settings/settings.component';
 import { TeamComponent } from './components/team/team.component';
 import { UserTournamentComponent } from './components/user-tournament/user-tournament.component';
+import { UpsertTournamentComponent } from './components/upsert-tournament/upsert-tournament.component';
+
+// Utility
+import { SetHttpHeader } from './utility/set-http-header';
 
 @NgModule({
   declarations: [
@@ -60,19 +56,13 @@ import { UserTournamentComponent } from './components/user-tournament/user-tourn
     TournamentDetailsComponent,
     SettingsComponent,
     TeamComponent,
-    UserTournamentComponent
+    UserTournamentComponent,
+    UpsertTournamentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatGridListModule,
-    MatCardModule,
-    MatTabsModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatListModule,
-    DragDropModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -84,11 +74,9 @@ import { UserTournamentComponent } from './components/user-tournament/user-tourn
     MatPaginatorModule,
     MatTableModule,
     MatNativeDateModule,
-    MatRippleModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatBottomSheetModule,
     MatCheckboxModule,
     MatTooltipModule,
     MatProgressBarModule,
@@ -101,12 +89,12 @@ import { UserTournamentComponent } from './components/user-tournament/user-tourn
     MatAutocompleteModule,
     LayoutModule,
     MatRadioModule,
-    MatBadgeModule,
     MatSlideToggleModule,
     MatSliderModule,
+    MatCardModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [SetHttpHeader],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

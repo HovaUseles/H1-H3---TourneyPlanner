@@ -6,7 +6,7 @@ import { Auth } from 'src/app/interfaces/auth';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email = new FormControl('', [Validators.required, Validators.email]);
