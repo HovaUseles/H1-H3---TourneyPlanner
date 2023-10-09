@@ -9,7 +9,7 @@ import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'Login',
     component: TournamentComponent
   },
   {
@@ -21,7 +21,7 @@ const routes: Routes = [
     component: TeamComponent
   },
   {
-    path: 'Login',
+    path: '',
     component: LoginComponent
   },
   {

@@ -2,7 +2,7 @@
   <mat-drawer #drawer class="example-sidenav" mode="side">
     <h3 style="text-align: center; font-weight: bolder;">TourneyPlanner</h3>
     <button routerLink="/" mat-raised-button style="display: block;"><mat-icon>public</mat-icon>Tournaments</button>
-    <button *ngIf="isLoggedIn" routerLink="User/Tournament" mat-raised-button style="display: block;"><mat-icon>person_pin</mat-icon>My tournaments</button>
+    <button *ngIf="isLoggedIn" routerLink="/User/Tournament" mat-raised-button style="display: block;"><mat-icon>person_pin</mat-icon>My tournaments</button>
     <button *ngIf="isLoggedIn" routerLink="/Settings" mat-raised-button style="display: block;"><mat-icon>settings</mat-icon>Settings</button>
   </mat-drawer>
 
@@ -15,7 +15,7 @@
       <mat-icon>exit_to_app</mat-icon>
     </button>
 
-    <button *ngIf="!isLoggedIn" matTooltip="Press to login" mat-raised-button style="max-height: 35px; margin-top: 2px; margin-right: 18px;" color="primary" routerLink="/Login">
+    <button *ngIf="!isLoggedIn" routerLink="/Login" matTooltip="Press to login" mat-raised-button style="max-height: 35px; margin-top: 2px; margin-right: 18px;" color="primary">
       Login
     </button>
   </div>
@@ -26,7 +26,7 @@
   </div>
 
   <ng-template #default>
-    <app-tournament></app-tournament>
+    <app-login></app-login>
   </ng-template>
 
 </mat-drawer-container>

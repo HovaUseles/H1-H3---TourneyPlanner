@@ -10,7 +10,7 @@ import { Auth } from 'src/app/interfaces/auth';
 })
 export class LoginComponent {
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl("", [Validators.required, Validators.minLength(6)]);
+  password = new FormControl("", [Validators.required, Validators.minLength(6), Validators.pattern("RegExp here")]);
 
   constructor(private authService: AuthenticationService) {
   }
