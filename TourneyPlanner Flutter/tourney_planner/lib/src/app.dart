@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tourney_planner/src/screens/login/login_screen.dart';
+import 'package:tourney_planner/src/screens/tournament/tournament_list_screen.dart';
 import 'package:tourney_planner/src/screens/utility/slide_animation_route.dart';
 import 'package:tourney_planner/src/screens/tournament/tournament_screen.dart';
 import 'controllers/settings_controller.dart';
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
               case TournamentScreen.routeName:
                 return SlideLeftRoute(widget: const TournamentScreen());
             }
+            return SlideLeftRoute(widget: const TournamentListScreen());
           },
         );
       },

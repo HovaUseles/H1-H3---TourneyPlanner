@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (_formkey.currentState!.validate()) {
-                                    Navigator.pushNamed(
+                                    Navigator.popAndPushNamed(
                                         context, TournamentScreen.routeName);
                                   }
                                 },

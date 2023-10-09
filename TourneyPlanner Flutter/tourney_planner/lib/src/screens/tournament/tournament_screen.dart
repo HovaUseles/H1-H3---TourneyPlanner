@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:tourney_planner/src/models/matchup.dart';
+import 'package:tourney_planner/src/models/player.dart';
+import 'package:tourney_planner/src/models/team.dart';
 import 'package:tourney_planner/src/models/teams_per_match.dart';
 import 'package:tourney_planner/src/models/tournament.dart';
 import 'package:tourney_planner/src/screens/team/team_screen.dart';
@@ -18,9 +20,46 @@ class TournamentScreen extends StatefulWidget {
 class _TournamentState extends State<TournamentScreen> {
   final Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
+  late final TournamentDto tournament; 
+
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    List<PlayerDto> players1 = [
+      PlayerDto(id: 1, firstName: 'fTest1', lastName: 'lTest1', teamId: 1),
+    ];
+    List<PlayerDto> players2 = [
+      PlayerDto(id: 2, firstName: 'fTest1', lastName: 'lTest1', teamId: 2),
+    ];
+    List<PlayerDto> players3 = [
+      PlayerDto(id: 3, firstName: 'fTest1', lastName: 'lTest1', teamId: 3),
+    ];
+    List<PlayerDto> players4 = [
+      PlayerDto(id: 4, firstName: 'fTest1', lastName: 'lTest1', teamId: 4),
+    ];
+    List<PlayerDto> players5 = [
+      PlayerDto(id: 5, firstName: 'fTest1', lastName: 'lTest1', teamId: 5),
+    ];
+    List<PlayerDto> players6 = [
+      PlayerDto(id: 6, firstName: 'fTest1', lastName: 'lTest1', teamId: 6),
+    ];
+    List<PlayerDto> players7 = [
+      PlayerDto(id: 7, firstName: 'fTest1', lastName: 'lTest1', teamId: 7),
+    ];
+    List<PlayerDto> players8 = [
+      PlayerDto(id: 8, firstName: 'fTest1', lastName: 'lTest1', teamId: 8),
+    ];
+    List<TeamDto> teams = [
+      TeamDto(id: 1, name: 'Team1', players: players1),
+      TeamDto(id: 2, name: 'Team2', players: players2),
+      TeamDto(id: 3, name: 'Team3', players: players3),
+      TeamDto(id: 4, name: 'Team4', players: players4),
+      TeamDto(id: 5, name: 'Team5', players: players5),
+      TeamDto(id: 6, name: 'Team6', players: players6),
+      TeamDto(id: 7, name: 'Team7', players: players7),
+      TeamDto(id: 8, name: 'Team8', players: players8)
+    ];
     List<TeamsPerMatchDto> matchup1 = [
       TeamsPerMatchDto(
           id: 1, score: 3, matchupId: 1, teamId: 1, teamName: 'Team1'),
@@ -74,7 +113,7 @@ class _TournamentState extends State<TournamentScreen> {
       MatchupDto(id: 7, round: 3, nextMatchupId: 7, teamsPerMatch: matchup7),
     ];
 
-    TournamentDto tournament = TournamentDto(
+    tournament = TournamentDto(
         id: 1,
         name: 'Test tournament',
         startDate: DateTime.now(),
@@ -84,24 +123,15 @@ class _TournamentState extends State<TournamentScreen> {
         gameTypeName: 'Football',
         tournamentTypeId: 1,
         tournamentTypeName: 'Knockout',
-        matchups: matches);
-
-    List<Node> nodes = [];
-
-    // Fails if done in the same loop since it isn't guaranteed a nextMatchupId node has been created yet
-    for (var element in tournament.matchups) {
-      graph.addNode(Node.Id(element.id));
-    }
-    for (var element in tournament.matchups) {
-      graph.addEdge(Node.Id(element.id), Node.Id(element.nextMatchupId));
-      // if (element.nextMatchupId != 0) {}
-    }
+        matchups: matches
+      );
+    
 
     // 1 = TOP_BOTTOM
     // 2 = BOTTOM_TOP
     // 3 = LEFT_RIGHT
     // 4 = RIGHT_LEFT
-    builder.orientation = 4;
+    builder.orientation = BuchheimWalkerConfiguration.ORIENTATION_RIGHT_LEFT;
 
     // Can be used for styling seperation between edges depending on team amount in tournament
     if (tournament.matchups.length <= 8) {
@@ -110,18 +140,23 @@ class _TournamentState extends State<TournamentScreen> {
       builder.subtreeSeparation = 150;
     }
 
+    //   // Fails if done in the same loop since it isn't guaranteed a nextMatchupId node has been created yet
+    // for (var element in tournament.matchups) {
+    //   graph.addNode(Node.Id(element.id));
+    // }
+    for (var element in tournament.matchups) {
+      graph.addEdge(Node.Id(element.id), Node.Id(element.nextMatchupId));
+      if (element.nextMatchupId != 0) {}
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
+
     return Scaffold(
       appBar: customAppBar(context: context, title: tournament.name),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: InteractiveViewer(
-              constrained: false,
-              boundaryMargin: const EdgeInsets.all(50),
-              minScale: 0.01,
-              maxScale: 7.5,
-              child: GraphView(
+      body: GraphView(
                 graph: graph,
                 algorithm:
                     BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
@@ -131,31 +166,156 @@ class _TournamentState extends State<TournamentScreen> {
                   ..style = PaintingStyle.stroke,
                 builder: (Node node) {
                   var id = (node.key!.value as int);
-                  List<TeamsPerMatchDto> teams = tournament.matchups
-                      .firstWhere((element) => element.id == id)
-                      .teamsPerMatch;
-                  return rectangleWidget(teams);
+                  // List<TeamsPerMatchDto> teamsPerMatch = tournament.matchups
+                  //     .firstWhere((element) => element.id == id)
+                  //     .teamsPerMatch;
+                  return rectangleWidget(id.toString());
                 },
               ),
-            ),
-          ),
-        ],
-      ),
+            
+      
     );
   }
 
-  Widget rectangleWidget(List<TeamsPerMatchDto> matchData) {
-    return SizedBox(
-      height: 100.0,
-      width: 100.0,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: matchData.length,
-        itemBuilder: (BuildContext ctxt, int index) {
-          return Text('${matchData[index].teamName} ${matchData[index].score}');
-        },
-      ),
+  Widget rectangleWidget(String? a) {
+    return InkWell(
+      onTap: () {
+        print('clicked');
+      },
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(color: Colors.blue[100]!, spreadRadius: 1),
+            ],
+          ),
+          child: Text('${a}')),
     );
+  }
+
+  // Widget createGraphWidget(
+  //     List<TeamsPerMatchDto> matchData, List<TeamDto> teams) {
+  //   return SingleChildScrollView(
+  //     scrollDirection: Axis.vertical,
+  //     child: Column(
+  //         children: [
+  //           InkWell(
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Image.asset('assets/logo_placeholder.jpg'),
+  //                 Text(matchData[0].teamName),
+  //                 Text(matchData[0].score.toString())
+  //               ],
+  //             ),
+  //             onTap: () {},
+  //           ),
+  //           const Divider(
+  //             color: Colors.black,
+  //             height: 2.0,
+  //           ),
+  //           InkWell(
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Image.asset('assets/logo_placeholder.jpg'),
+  //                 Text(matchData[1].teamName),
+  //                 Text(matchData[1].score.toString())
+  //               ],
+  //             ),
+  //             onTap: () {},
+  //           ),
+  //         ],
+  //       ),
+      
+  //   );
+  // }
+
+  // Widget rectangleWidget(
+  //     List<TeamsPerMatchDto> matchData, List<TeamDto> teams) {
+  //   return InkWell(
+  //     onTap: () {
+  //       print('clicked');
+  //     },
+  //     child: Container(
+  //       width: 200,
+  //       height: 100,
+  //       padding: const EdgeInsets.all(16),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(4),
+  //         boxShadow: [
+  //           BoxShadow(color: Colors.black, spreadRadius: 1),
+  //         ],
+  //       ),
+  //       child: SingleChildScrollView(
+  //         child: Column(
+  //           children: [
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Image.asset('assets/logo_placeholder.jpg'),
+  //                 Text(matchData[0].teamName),
+  //                 Text(matchData[0].score.toString())
+  //               ],
+  //             ),
+  //             const Divider(
+  //               color: Colors.black,
+  //               height: 2.0,
+  //             ),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Image.asset('assets/logo_placeholder.jpg'),
+  //                 Text(matchData[1].teamName),
+  //                 Text(matchData[1].score.toString())
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+    // return SizedBox(
+    //   width: 100,
+    //   height: 100,
+    //   child: Column(
+    //     children: [
+    //       Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //         children: [
+    //           Text(matchData[0].teamName),
+    //           Text(matchData[0].score.toString())
+    //         ],
+    //       ),
+    //       const Divider(
+    //         color: Colors.black,
+    //         height: 2.0,
+    //       ),
+    //       Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //         children: [
+    //           Text(matchData[1].teamName),
+    //           Text(matchData[1].score.toString())
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    // );
+    // return ListView.builder(
+    //       scrollDirection: Axis.horizontal,
+    //       shrinkWrap: true,
+    //       itemCount: matchData.length,
+    //       itemBuilder: (BuildContext ctxt, int index) {
+    //         return InkWell(
+    //           child: Text(
+    //               '${matchData[index].teamName} ${matchData[index].score}'),
+    //           onTap: () {
+    //             Navigator.restorablePushNamed(context, TeamScreen.routeName,
+    //                 arguments: teams[index]);
+    //           },
+    //         );
+    //       },
+    //     );
     // return SizedBox(
     //   height: 50,
     //   width: 100,
@@ -231,5 +391,5 @@ class _TournamentState extends State<TournamentScreen> {
     //         // arguments: item.teamId
     //       );
     //     });
-  }
+  // }
 }
