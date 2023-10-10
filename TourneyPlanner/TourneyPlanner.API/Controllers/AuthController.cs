@@ -47,7 +47,7 @@ namespace TourneyPlanner.API.Controllers
             // Validate password
             if(!ValidatePassword(dto.Password))
             {
-                return BadRequest("Password not strong enough");
+                return BadRequest("Password not strong enough. Must be atleast 8 characters long and contain atleast 1 lowercase, 1 uppercase and either 1 number or 1 special character.");
             }
 
             await _userRepository.Create(dto);

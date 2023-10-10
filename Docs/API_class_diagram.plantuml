@@ -159,11 +159,11 @@ interface IMatchupBuilder {
 }
 
 abstract class TournamentFactory {
-    +{abstract}TournamentDto Create()
+    +{abstract}List<Matchup> BuildMatchups()
 } 
 
 class KnockoutTournamentFactory {
-    +TournamentDto Create()
+    +List<Matchup> BuildMatchups()
 }
 TournamentFactory <|-- KnockoutTournamentFactory : inherits
 
