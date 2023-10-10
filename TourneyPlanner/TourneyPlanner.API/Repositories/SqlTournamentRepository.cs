@@ -244,6 +244,7 @@ namespace TourneyPlanner.API.Repositories
                     {
                         Id = m.Id,
                         Round = m.Rounds,
+                        NextMatchupId = m.NextMatchupId,
                         Teams = m.MatchupTeams.ToList().ConvertAll<TeamDto>(mt =>
                         {
                             return new TeamDto

@@ -34,14 +34,13 @@ namespace TourneyPlanner.API.Factories.Tournament
 
                 for (int matchNumber = 0; matchNumber < numberOfMatchesInRound; matchNumber++)
                 {
-                    MatchupTeam team1 = null;
-                    MatchupTeam team2 = null;
+                    List<MatchupTeam> matchupTeams = new List<MatchupTeam>();
 
                     // build first round with teams
                     if(round == 1) 
                     {
-                        team1 = PickRandomMatchupTeam(teams);
-                        team2 = PickRandomMatchupTeam(teams);
+                        matchupTeams.Add(PickRandomMatchupTeam(teams));
+                        matchupTeams.Add(PickRandomMatchupTeam(teams));
                     }
 
                     Matchup? nextMachup = null;
@@ -60,11 +59,7 @@ namespace TourneyPlanner.API.Factories.Tournament
                     {
                         StartDateTime = DateTime.Now,
                         Rounds = round,
-                        MatchupTeams = new MatchupTeam[]
-                        {
-                            team1,
-                            team2
-                        },
+                        MatchupTeams = matchupTeams,
                         NextMatchup = nextMachup
                     };
 
@@ -73,8 +68,7 @@ namespace TourneyPlanner.API.Factories.Tournament
             }
 
             //matchups.Reverse(); // Reverse the list so the first rounds comes first
-            //return matchups;
-            return matchups.Where(m => m.Rounds == 1);
+            return matchups;
         }
 
         /// <summary>

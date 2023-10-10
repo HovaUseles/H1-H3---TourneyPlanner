@@ -1,6 +1,4 @@
-﻿--alter database TourneyPlannerDev set single_user with rollback immediate
---DROP DATABASE IF EXISTS TourneyPlannerDev;
-
+﻿
 --CREATE DATABASE TourneyPlannerDev;
 --USE TourneyPlannerDev;
 
