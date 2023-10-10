@@ -14,7 +14,7 @@ namespace TourneyPlanner.API.Repositories
             _context = context;
         }
 
-        public async Task<TournamentDto> Create(CreateTournamentDto dto)
+        public async Task<TournamentDto> Create(UserDto userDto, CreateTournamentDto dto)
         {
             TournamentType? tournamentType = _context.TournamentTypes.Find(dto.TournamentTypeId);
 
@@ -42,13 +42,19 @@ namespace TourneyPlanner.API.Repositories
                 throw new ArgumentException($"No GameType exists with Id: {dto.GameTypeId}", nameof(dto.GameTypeId));
             }
 
+            User? user = await _context.Users.FindAsync(userDto.Id);
+            if(user == null)
+            {
+                throw new ArgumentException($"No User exists with Id: {userDto.Id}", nameof(userDto.Id));
+            }
+
             Tournament tournament = new Tournament 
             { 
                 Name = dto.Name,
                 StartDate = dto.StartDate,
                 GameType = gameType,
                 TournamentType = tournamentType,
-                User = await _context.Users.FindAsync(1), // TODO: Get User here, from JWT
+                User = user,
                 Matchups = matchups.ToArray()
             };
 
@@ -157,46 +163,6 @@ namespace TourneyPlanner.API.Repositories
             }
 
             return ConvertToDto(tournament);
-            //return new TournamentDto
-            //{
-            //    Id = tournament.Id,
-            //    Name = tournament.Name,
-            //    StartDate = tournament.StartDate,
-            //    Type = tournament.TournamentType.Name,
-            //    GameType = tournament.GameType.Name,
-            //    CreatedBy = new UserDto
-            //    {
-            //        Id = tournament.User.Id,
-            //        Email = tournament.User.Email
-            //    },
-            //    Matchups = tournament.Matchups.ToList().ConvertAll<MatchupDto>(m =>
-            //    {
-            //        return new MatchupDto
-            //        {
-            //            Id = m.Id,
-            //            Round = m.Rounds,
-            //            Teams = m.MatchupTeams.ToList().ConvertAll<TeamDto>(mt =>
-            //            {
-            //                return new TeamDto
-            //                {
-            //                    Id = mt.Team.Id,
-            //                    TeamName = mt.Team.Name,
-            //                    Score = mt.Score ?? 0,
-            //                    Players = mt.Team.Players.ToList().ConvertAll<PlayerDto>(p =>
-            //                    {
-            //                        return new PlayerDto
-            //                        {
-            //                            Id = p.Id,
-            //                            FirstName = p.FirstName,
-            //                            LastName = p.LastName
-            //                        };
-            //                    })
-            //                };
-            //            })
-            //        };
-            //    })
-            //};
-
         }
 
         public async Task Update(int id, CreateTournamentDto dtoChanges)

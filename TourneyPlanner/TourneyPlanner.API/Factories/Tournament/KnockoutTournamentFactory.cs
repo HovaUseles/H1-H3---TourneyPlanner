@@ -72,7 +72,7 @@ namespace TourneyPlanner.API.Factories.Tournament
         }
 
         /// <summary>
-        /// Picks a random team from a list of TeamDtom, removes it from the source and returns it as a MatchupTeam
+        /// Picks a random team from a list of TeamDto, removes it from the source and returns it as a MatchupTeam
         /// </summary>
         /// <param name="teams">The TeamDto source</param>
         /// <returns>The randomly picked teams</returns>

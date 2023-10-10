@@ -16,9 +16,14 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             return new Mock<ITournamentRepository>();
         }
 
-        protected TournamentController GetSut(Mock<ITournamentRepository> tournamentRepoMock)
+        protected Mock<IUserRepository> GetUserRepoMock()
         {
-            return new TournamentController(tournamentRepoMock.Object);
+            return new Mock<IUserRepository>();
+        }
+
+        protected TournamentController GetSut(Mock<ITournamentRepository> tournamentRepoMock, Mock<IUserRepository> userRepoMock)
+        {
+            return new TournamentController(tournamentRepoMock.Object, userRepoMock.Object);
         }
 
         protected CreateTournamentDto GetMockCreateTournamentDto()
@@ -189,7 +194,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             {
                 // Arrange
                 var repoMock = GetTournamentRepoMock();
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                TournamentController sut = GetSut(repoMock, userRepoMock);
 
                 // Act
                 var result = await sut.GetAll();
@@ -206,7 +212,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
 
                 var repoMock = GetTournamentRepoMock();
                 repoMock.Setup(x => x.GetAll()).ReturnsAsync(tournamentDtos);
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                TournamentController sut = GetSut(repoMock, userRepoMock);
 
                 // Act
                 var result = await sut.GetAll();
@@ -237,7 +244,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
 
                 var repoMock = GetTournamentRepoMock();
                 repoMock.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(tournamentDto);
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                TournamentController sut = GetSut(repoMock, userRepoMock);
 
                 // Act
                 var result = await sut.GetById(1);
@@ -254,7 +262,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
 
                 var repoMock = GetTournamentRepoMock();
                 repoMock.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(tournamentDto);
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                TournamentController sut = GetSut(repoMock, userRepoMock);
 
                 // Act
                 var result = await sut.GetById(1);
@@ -281,7 +290,14 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
             {
                 // Arrange
                 var repoMock = GetTournamentRepoMock();
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                UserDto user = new UserDto
+                {
+                    Id = 1,
+                    Email = "Test@test.com"
+                };
+                userRepoMock.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(user);
+                TournamentController sut = GetSut(repoMock, userRepoMock);
                 CreateTournamentDto createDto = GetMockCreateTournamentDto();
 
                 // Act
@@ -299,8 +315,15 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 CreateTournamentDto createDto = GetMockCreateTournamentDto();
 
                 var repoMock = GetTournamentRepoMock();
-                repoMock.Setup(x => x.Create(createDto)).ReturnsAsync(tournamentDto);
-                TournamentController sut = GetSut(repoMock);
+                repoMock.Setup(x => x.Create(It.IsAny<UserDto>(), createDto)).ReturnsAsync(tournamentDto);
+                var userRepoMock = GetUserRepoMock();
+                UserDto user = new UserDto
+                {
+                    Id = 1,
+                    Email = "Test@test.com"
+                };
+                userRepoMock.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(user);
+                TournamentController sut = GetSut(repoMock, userRepoMock);
 
                 // Act
                 var result = await sut.Create(createDto);
@@ -328,7 +351,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 // Arrange
                 TournamentDto tournamentDto = GetMockTournaments().Where(t => t.Id == 1).First();
                 var repoMock = GetTournamentRepoMock();
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                TournamentController sut = GetSut(repoMock, userRepoMock);
                 CreateTournamentDto createDto = GetMockCreateTournamentDto();
                 CreateTournamentDto updatedDto = createDto with
                 {
@@ -356,7 +380,8 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                 var repoMock = GetTournamentRepoMock();
                 repoMock.Setup(x => x.GetById(tournamentDto.Id)).ReturnsAsync(tournamentDto);
                 repoMock.Setup(x => x.Delete(It.IsAny<int>())).Returns(Task.CompletedTask);
-                TournamentController sut = GetSut(repoMock);
+                var userRepoMock = GetUserRepoMock();
+                TournamentController sut = GetSut(repoMock, userRepoMock);
 
                 // Act
                 var result = await sut.Delete(tournamentDto.Id);

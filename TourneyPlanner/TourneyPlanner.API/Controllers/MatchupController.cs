@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Repositories;
@@ -21,6 +22,7 @@ namespace TourneyPlanner.API.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize]
         public async Task<ActionResult> FollowMatchup(int matchupId)
         {
             int userId = 1; // TODO: Get From JWT Token
