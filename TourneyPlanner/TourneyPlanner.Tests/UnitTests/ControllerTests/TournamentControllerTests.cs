@@ -95,11 +95,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                     StartDate = DateTime.Parse("17/10/2022"),
                     CreatedBy = new UserDto { Id = 1, Email = "TestUser" },
                     GameType = "Paddle",
-                    Type = new TournamentType
-                    {
-                        Id = 1,
-                        Name = "Knockout"
-                    },
+                    Type = "Knockout",
                     Matchups = new List<MatchupDto> {
                         new MatchupDto
                         {
@@ -142,11 +138,7 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                     StartDate = DateTime.Parse("22/8/2021"),
                     CreatedBy = new UserDto { Id = 1, Email = "TestUser" },
                     GameType = "Paddle",
-                    Type = new TournamentType
-                    {
-                        Id = 1,
-                        Name = "Knockout"
-                    },
+                    Type = "Knockout",
                     Matchups = new List<MatchupDto> {
                         new MatchupDto
                         {

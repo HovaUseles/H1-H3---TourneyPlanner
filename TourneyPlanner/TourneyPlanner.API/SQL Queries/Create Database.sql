@@ -1,28 +1,29 @@
-﻿--alter database IF EXISTS TourneyPlannerDev set single_user with rollback immediate
+﻿--alter database TourneyPlannerDev set single_user with rollback immediate
 --DROP DATABASE IF EXISTS TourneyPlannerDev;
 
 --CREATE DATABASE TourneyPlannerDev;
-USE TourneyPlannerDev;
+--USE TourneyPlannerDev;
 
---DROP TABLE IF EXISTS [User];
---DROP TABLE IF EXISTS GameType;
---DROP TABLE IF EXISTS TournamentType;
---DROP TABLE IF EXISTS Tournament;
---DROP TABLE IF EXISTS Matchup;
---DROP TABLE IF EXISTS Team;
---DROP TABLE IF EXISTS Player;
---DROP TABLE IF EXISTS MatchupTeam;
+DROP TABLE IF EXISTS Player;
+DROP TABLE IF EXISTS MatchupTeam;
+DROP TABLE IF EXISTS Team;
+DROP TABLE IF EXISTS FavoritMatchup;
+DROP TABLE IF EXISTS Matchup;
+DROP TABLE IF EXISTS Tournament;
+DROP TABLE IF EXISTS TournamentType;
+DROP TABLE IF EXISTS GameType;
+DROP TABLE IF EXISTS [User];
 
 
 CREATE TABLE [User] (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Email VARCHAR(100) NOT NULL,
 	PasswordHash VARCHAR(100) NOT NULL,
 	Salt VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE GameType (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Name VARCHAR(50) NOT NULL,
 	TeamsPerMatch INT NOT NULL,
 	PointsForDraw INT NOT NULL,
@@ -30,12 +31,12 @@ CREATE TABLE GameType (
 );
 
 CREATE TABLE TournamentType (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Tournament (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Name VARCHAR(100) NOT NULL,
 	StartDate DATE NOT NULL,
 	EndDate DATE NOT NULL,
@@ -48,7 +49,7 @@ CREATE TABLE Tournament (
 );
 
 CREATE TABLE Matchup (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	StartDateTime DATETIME NOT NULL,
 	Rounds INT NOT NULL,
 	TournamentId INT NOT NULL,
@@ -58,12 +59,12 @@ CREATE TABLE Matchup (
 );
 
 CREATE TABLE Team (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Player (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	FirstName VARCHAR(50) NOT NULL,
 	LastName VARCHAR (50) NOT NULL,
 	TeamId INT NOT NULL,
@@ -71,7 +72,7 @@ CREATE TABLE Player (
 );
 
 CREATE TABLE MatchupTeam (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	Score INT,
 	TeamId INT NOT NULL,
 	MatchupId INT NOT NULL,
@@ -80,9 +81,18 @@ CREATE TABLE MatchupTeam (
 );
 
 CREATE TABLE FavoritMatchup (
-	Id INT NOT NULL PRIMARY KEY,
+	Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	MatchupId INT NOT NULL,
 	UserId INT NOT NULL,
 	FOREIGN KEY (MatchupId) REFERENCES Matchup(Id),
 	FOREIGN KEY (UserId) REFERENCES [User](Id)
 );
+
+INSERT INTO TournamentType (Name)
+VALUES ('Knockout');
+
+INSERT INTO GameType (Name, TeamsPerMatch, PointsForDraw, PointsForWin)
+VALUES ('Football', 2, 1, 3);
+
+INSERT INTO [User] (Email, PasswordHash, Salt)
+VALUES ('DummyUser@Tourneyplanner.com', 'Test', 'Test');

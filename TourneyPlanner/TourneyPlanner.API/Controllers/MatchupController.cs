@@ -28,11 +28,17 @@ namespace TourneyPlanner.API.Controllers
 
             if (user == null)
             {
-                return BadRequest("User not found");
+                return NotFound("User not found");
             }
 
-            MatchupDto matchupDto =  await _matchupRepository.GetById(matchupId);
-            await _matchupRepository.FollowMatchup(matchupDto, (UserDto)user);
+            MatchupDto? matchupDto =  await _matchupRepository.GetById(matchupId);
+
+            if (matchupDto == null)
+            {
+                return NotFound("Matchups not found");
+            }
+
+            await _matchupRepository.FollowMatchup((MatchupDto)matchupDto, (UserDto)user);
 
             return Ok();
         }

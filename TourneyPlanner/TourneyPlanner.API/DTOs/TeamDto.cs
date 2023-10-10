@@ -5,7 +5,7 @@
     /// </summary>
     public record struct TeamDto
     {
-        public required int Id { get; init; }
+        public int Id { get; init; }
         public required string TeamName { get; init; }
         public required int Score { get; init; }
         public required IEnumerable<PlayerDto> Players { get; init; }

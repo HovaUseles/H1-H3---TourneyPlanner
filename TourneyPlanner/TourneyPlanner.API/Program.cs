@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Models;
 using TourneyPlanner.API.Repositories;
+using TourneyPlanner.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
+builder.Services.AddScoped<ITournamentRepository, SqlTournamentRepository>();
+builder.Services.AddScoped<IMatchupRepository, SqlMatchupRepository>();
+
+builder.Services.AddScoped<IHashingService, HashingService>();
+builder.Services.AddScoped<ISaltService, SaltService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddDbContext<TourneyPlannerDevContext>(options =>
 {
