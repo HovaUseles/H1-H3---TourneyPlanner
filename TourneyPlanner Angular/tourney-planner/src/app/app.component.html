@@ -20,7 +20,7 @@
     </button>
   </div>
 
-  <div *ngIf="isLoggedIn; else default" class="exmaple-body">
+  <div *ngIf="!isLoggedIn; else default" class="exmaple-body">
     <router-outlet>
     </router-outlet>
   </div>

@@ -1,0 +1,29 @@
+<div style="width: 100%; display: flex; justify-content: center;">
+
+  <mat-card style="display: flex; justify-content: center; min-width: 97%; height: fit-content; padding: 15px;">
+
+    <h3>Login</h3>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput [formControl]="email">
+      <mat-error *ngIf="email.invalid">{{getEmailErrorMessage()}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput [formControl]="password">
+      <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Confirm password</mat-label>
+      <input type="password" matInput [formControl]="confirmPassword">
+      <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+    </mat-form-field>
+
+    <button [disabled]="!email.valid || !password.valid || confirmPassword.valid" mat-raised-button (click)="submitRegistration()">Submit</button>
+
+  </mat-card>
+
+</div>

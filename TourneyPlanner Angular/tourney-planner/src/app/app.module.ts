@@ -44,9 +44,16 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { TeamComponent } from './components/team/team.component';
 import { UserTournamentComponent } from './components/user-tournament/user-tournament.component';
 import { UpsertTournamentComponent } from './components/upsert-tournament/upsert-tournament.component';
+import { RegisterComponent } from './components/register/register.component';
 
 // Utility
 import { SetHttpHeader } from './utility/set-http-header';
+
+declare global {
+  interface Window {
+    bracketsViewer?: any | undefined;
+  }
+}
 
 @NgModule({
   declarations: [
@@ -57,7 +64,8 @@ import { SetHttpHeader } from './utility/set-http-header';
     SettingsComponent,
     TeamComponent,
     UserTournamentComponent,
-    UpsertTournamentComponent
+    UpsertTournamentComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
