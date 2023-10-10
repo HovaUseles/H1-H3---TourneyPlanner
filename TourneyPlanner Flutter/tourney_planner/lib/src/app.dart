@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
-import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
+import 'package:tourney_planner/src/screens/login/login_screen.dart';
+import 'package:tourney_planner/src/screens/tournament/tournament_list_screen.dart';
+import 'package:tourney_planner/src/screens/utility/slide_animation_route.dart';
+import 'package:tourney_planner/src/screens/tournament/tournament_screen.dart';
+import 'controllers/settings_controller.dart';
+import 'screens/settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -60,23 +61,24 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
 
+          initialRoute: '/tournament',
+
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
           onGenerateRoute: (RouteSettings routeSettings) {
-            return MaterialPageRoute<void>(
-              settings: routeSettings,
-              builder: (BuildContext context) {
-                switch (routeSettings.name) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
-                  default:
-                    return const SampleItemListView();
-                }
-              },
-            );
+            switch (routeSettings.name) {
+              case LoginScreen.routeName:
+                return SlideLeftRoute(
+                  widget: const LoginScreen(),
+                );
+              case SettingsView.routeName:
+                return SlideLeftRoute(
+                  widget: SettingsView(controller: settingsController),
+                );
+              case TournamentScreen.routeName:
+                return SlideLeftRoute(widget: const TournamentScreen());
+            }
+            return SlideLeftRoute(widget: const TournamentListScreen());
           },
         );
       },

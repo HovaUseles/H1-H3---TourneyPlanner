@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1034206221230",
+    "project_id": "initial-project-a2af8",
+    "storage_bucket": "initial-project-a2af8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034206221230:android:e031d1dc72cf8732db6e3f",
+        "android_client_info": {
+          "package_name": "com.example.tourney_planner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAICOpuPouiYSoA8upnwOH_1cDQu_5j0NI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
