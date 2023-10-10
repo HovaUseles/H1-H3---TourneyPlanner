@@ -7,7 +7,7 @@ export const environment = {
   config: {
     apiUrl: 'http://localhost:7127',
     loginFailedRoute:"http://localhost:4200",
-    applicationJwtID:"HerErEnKodeMedRigtigMangeOrdISåDenKanOpfyldeKravetForEnLangKode"
+    applicationJwtID:"TestCertificateAndJwtKomNuForHelvedeHvorMangeTegnSkalDerTil"
   }
 };
 
