@@ -10,11 +10,11 @@ import { Auth } from 'src/app/interfaces/auth'
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  // Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
-  regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$";
+  // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+  regex = "^((?=.*\\d)|(?=.*[^a-zA-Z0-9]))+(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl("", [Validators.required, Validators.minLength(6), Validators.pattern(this.regex)]);
-  confirmPassword = new FormControl("", [Validators.required, Validators.minLength(6), Validators.pattern(this.regex)]);
+  password = new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern(this.regex)]);
+  confirmPassword = new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern(this.regex)]);
 
   constructor(private matDialogRef: MatDialogRef<RegisterComponent>, private authService: AuthenticationService) { }
 

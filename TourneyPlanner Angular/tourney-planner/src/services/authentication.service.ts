@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  url: string = environment.config.apiUrl + "/api/Auth";
+  url: string = environment.config.apiUrl + "/api/auth";
   registerEndpoint: string = "/register";
 
   private loggedInSubject$: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -29,6 +29,8 @@ export class AuthenticationService {
   }
 
   register(login: Auth) {
+    console.log(login);
+
     this.httpClient.post<Token>(this.url + this.registerEndpoint, login).subscribe(x => {
       this.checkResponse(x);
     });
