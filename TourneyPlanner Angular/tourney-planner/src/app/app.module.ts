@@ -35,6 +35,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 
+// Utility
+import { SetHttpHeader } from './utility/set-http-header';
+
 // Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -43,11 +46,9 @@ import { TournamentDetailsComponent } from './components/tournament-details/tour
 import { SettingsComponent } from './components/settings/settings.component';
 import { TeamComponent } from './components/team/team.component';
 import { UserTournamentComponent } from './components/user-tournament/user-tournament.component';
-import { UpsertTournamentComponent } from './components/upsert-tournament/upsert-tournament.component';
 import { RegisterComponent } from './components/register/register.component';
-
-// Utility
-import { SetHttpHeader } from './utility/set-http-header';
+import { TournamentUpdateComponent } from './components/tournament-update/tournament-update.component';
+import { TournamentCreateComponent } from './components/tournament-create/tournament-create.component';
 
 declare global {
   interface Window {
@@ -64,8 +65,9 @@ declare global {
     SettingsComponent,
     TeamComponent,
     UserTournamentComponent,
-    UpsertTournamentComponent,
-    RegisterComponent
+    RegisterComponent,
+    TournamentUpdateComponent,
+    TournamentCreateComponent
   ],
   imports: [
     BrowserModule,
