@@ -13,7 +13,7 @@ const routes: Routes = [
     component: TournamentComponent
   },
   {
-    path: 'Tournament',
+    path: '',
     component: TournamentDetailsComponent
   },
   {
@@ -21,7 +21,7 @@ const routes: Routes = [
     component: TeamComponent
   },
   {
-    path: '',
+    path: 'Tournament',
     component: LoginComponent
   },
   {
