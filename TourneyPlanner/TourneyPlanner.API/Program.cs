@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -85,6 +86,17 @@ builder.Services.AddDbContext<TourneyPlannerDevContext>(options =>
     options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddFilter(level => level >= LogLevel.Warning)));
 });
 
+string corsPolicy = "_allow";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicy,
+                      policy =>
+                      {
+                          policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+                      });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -98,6 +110,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(corsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
