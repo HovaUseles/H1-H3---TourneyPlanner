@@ -1,0 +1,57 @@
+{
+  "name": "string",
+  "tournamentTypeId": 1,
+  "gameTypeId": 1,
+  "startDate": "2023-10-10T08:26:45.435Z",
+  "randomnizeTeams": true,
+  "teams": [
+    {
+      "id": 0,
+      "teamName": "Team 1",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Player",
+          "lastName": " 1"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "Team 2",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Player",
+          "lastName": " 2"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "Team 3",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Player",
+          "lastName": " 3"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "Team 4",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Player",
+          "lastName": " 4"
+        }
+      ]
+    }
+  ]
+}

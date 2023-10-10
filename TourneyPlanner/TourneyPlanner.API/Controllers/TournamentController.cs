@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Repositories;
 
@@ -11,14 +12,19 @@ namespace TourneyPlanner.API.Controllers
     public class TournamentController : ControllerBase
     {
         private readonly ITournamentRepository _tournamentRepository;
+        private readonly IUserRepository _userRepository;
 
-        public TournamentController(ITournamentRepository tournamentRepository)
+        public TournamentController(
+            ITournamentRepository tournamentRepository,
+            IUserRepository userRepository)
         {
             _tournamentRepository = tournamentRepository;
+            _userRepository = userRepository;
         }
 
         // GET: api/<TournamentController>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TournamentDto>>> GetAll()
         {
             return Ok(await _tournamentRepository.GetAll());
@@ -26,6 +32,7 @@ namespace TourneyPlanner.API.Controllers
 
         // GET api/<TournamentController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<TournamentDto>> GetById(int id)
         {
             TournamentDto? tournament = await _tournamentRepository.GetById(id);
@@ -38,14 +45,24 @@ namespace TourneyPlanner.API.Controllers
 
         // POST api/<TournamentController>
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<TournamentDto>> Create([FromBody] CreateTournamentDto dto)
         {
-            TournamentDto createdTournament = await _tournamentRepository.Create(dto);
+            int userId = 1; // TODO: Get From JWT Token
+            UserDto? user = await _userRepository.GetById(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            TournamentDto createdTournament = await _tournamentRepository.Create((UserDto)user, dto);
             return Created($"api/Tournament/{createdTournament.Id}", createdTournament);
         }
 
         // PUT api/<TournamentController>/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult> Edit(int id, [FromBody] CreateTournamentDto dtoChanges)
         {
             await _tournamentRepository.Update(id, dtoChanges);
@@ -54,6 +71,7 @@ namespace TourneyPlanner.API.Controllers
 
         // DELETE api/<TournamentController>/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
             if(await _tournamentRepository.GetById(id) == null)

@@ -40,8 +40,8 @@ namespace TourneyPlanner.API.Repositories
                 Salt = salt
             };
 
-            _context.Add( user );
-
+            await _context.AddAsync( user );
+            await _context.SaveChangesAsync();
             return;
         }
 
