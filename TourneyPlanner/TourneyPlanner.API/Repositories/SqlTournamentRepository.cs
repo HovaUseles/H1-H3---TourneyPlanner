@@ -91,6 +91,7 @@ namespace TourneyPlanner.API.Repositories
             //    .ToListAsync();
 
             List<Tournament> tournaments = await _context.Tournaments
+                .Include(t => t.User)
                 .Include(t => t.TournamentType)
                 .Include(t => t.GameType)
                 .Include(t => t.Matchups)
@@ -149,6 +150,7 @@ namespace TourneyPlanner.API.Repositories
         public async Task<TournamentDto?> GetById(int id)
         {
             Tournament? tournament = await _context.Tournaments
+                .Include(t => t.User)
                 .Include(t => t.TournamentType)
                 .Include(t => t.GameType)
                 .Include(t => t.Matchups)
