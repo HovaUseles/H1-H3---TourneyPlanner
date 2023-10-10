@@ -12,8 +12,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
+  regex = "^((?=.*\\d)|(?=.*[^a-zA-Z0-9]))+(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl("", [Validators.required, Validators.minLength(6), Validators.pattern("RegExp here")]);
+  password = new FormControl("", [Validators.required, Validators.minLength(6), Validators.pattern(this.regex)]);
 
   constructor(private authService: AuthenticationService, private matDialog: MatDialog, private router: Router) {
   }
@@ -25,6 +27,7 @@ export class LoginComponent {
   submitLogin() {
     let login: Auth = {email: this.email.value!, password: this.password.value!};
     this.authService.getToken(login);
+    this.router.navigateByUrl("/")
   }
 
   getEmailErrorMessage() {
@@ -40,7 +43,7 @@ export class LoginComponent {
       return 'You must enter a value';
     }
     else if (this.password.hasError("pattern")) {
-      return 'Password must contain number, special character,\nuppercase and lowercase characters'
+      return 'Password must contain at least one uppercase letter, one lowercase letter, one number or one special character'
     }
 
     return this.password.hasError('minlength') ? 'Must be atleast 6 characters' : '';

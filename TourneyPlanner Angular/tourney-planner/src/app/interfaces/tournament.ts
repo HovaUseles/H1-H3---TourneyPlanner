@@ -4,9 +4,7 @@ export interface Tournament {
   id: number;
   name: string;
   startDate: Date;
-  tournamentTypeName: string;
-  tournamentTypeId: number;
-  gameTypeName: string;
-  gameTypeId: number;
+  gameType: string;
+  type: string;
   matchups: Matchup[];
 }

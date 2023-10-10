@@ -2,6 +2,7 @@ import { Player } from "./player";
 
 export interface Team {
   id: number;
-  name: string;
+  teamName: string;
+  score?: number;
   players: Player[];
 }

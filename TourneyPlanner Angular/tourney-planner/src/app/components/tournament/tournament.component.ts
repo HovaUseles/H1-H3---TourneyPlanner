@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Tournament } from 'src/app/interfaces/tournament';
 import { TournamentService } from 'src/services/tournament.service';
-import { UpsertTournamentComponent } from '../upsert-tournament/upsert-tournament.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
@@ -13,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class TournamentComponent {
   tournaments: MatTableDataSource<Tournament> = new MatTableDataSource();
-  displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type"];
+  displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type", "Favorite"];
 
   constructor(private tournamentService: TournamentService, private router: Router) {
     this.tournamentService.getTournaments();
@@ -25,6 +23,7 @@ export class TournamentComponent {
   };
 
   tournamentDetails(tournament: Tournament) {
+    this.tournamentService.getTournamentDetails(tournament.id.toString());
     this.router.navigateByUrl('/Tournament', {state: {data: tournament.id}});
   };
 };

@@ -2,8 +2,10 @@
   <mat-drawer #drawer class="example-sidenav" mode="side">
     <h3 style="text-align: center; font-weight: bolder;">TourneyPlanner</h3>
     <button routerLink="/" mat-raised-button style="display: block;"><mat-icon>public</mat-icon>Tournaments</button>
-    <button *ngIf="isLoggedIn" routerLink="/User/Tournament" mat-raised-button style="display: block;"><mat-icon>person_pin</mat-icon>My tournaments</button>
-    <button *ngIf="isLoggedIn" routerLink="/Settings" mat-raised-button style="display: block;"><mat-icon>settings</mat-icon>Settings</button>
+    <button *ngIf="isLoggedIn$ | async" routerLink="/User/Tournament" mat-raised-button
+      style="display: block;"><mat-icon>person_pin</mat-icon>My tournaments</button>
+    <button *ngIf="isLoggedIn$ | async" routerLink="/Settings" mat-raised-button
+      style="display: block;"><mat-icon>settings</mat-icon>Settings</button>
   </mat-drawer>
 
   <div class="example-sidenav-content" style="display: flex; justify-content: space-between;">
@@ -11,22 +13,18 @@
       <mat-icon>reorder</mat-icon>
     </button>
 
-    <button *ngIf="isLoggedIn" matTooltip="Press to logout" mat-button (click)="Logout()" style="max-height: 35px; margin-top: 2px; margin-right: 5px;" color="warn">
+    <button *ngIf="isLoggedIn$ | async" matTooltip="Press to logout" mat-button (click)="Logout()"
+      style="max-height: 35px; margin-top: 2px; margin-right: 5px;" color="warn">
       <mat-icon>exit_to_app</mat-icon>
     </button>
 
-    <button *ngIf="!isLoggedIn" routerLink="/Login" matTooltip="Press to login" mat-raised-button style="max-height: 35px; margin-top: 2px; margin-right: 18px;" color="primary">
+    <button *ngIf="test" routerLink="/Login" matTooltip="Press to login" mat-raised-button
+      style="max-height: 35px; margin-top: 2px; margin-right: 18px;" color="primary">
       Login
     </button>
   </div>
+  <router-outlet>
+  </router-outlet>
 
-  <div *ngIf="!isLoggedIn; else default" class="exmaple-body">
-    <router-outlet>
-    </router-outlet>
-  </div>
-
-  <ng-template #default>
-    <app-login></app-login>
-  </ng-template>
 
 </mat-drawer-container>

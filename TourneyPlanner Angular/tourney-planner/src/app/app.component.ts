@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthenticationService } from 'src/services/authentication.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +11,14 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class AppComponent {
   title = 'TourneyPlanner';
-  isLoggedIn = false;
+  isLoggedIn$: Observable<boolean>;
+  test = false;
 
   constructor(private authService: AuthenticationService, private router: Router, private matDialog: MatDialog) {
+    this.isLoggedIn$ = this.authService.loggedIn$;
     this.authService.loggedIn$.subscribe(x => {
-      this.isLoggedIn = x;
-    });
+      this.test = !x;
+    })
   };
 
   Logout() {
