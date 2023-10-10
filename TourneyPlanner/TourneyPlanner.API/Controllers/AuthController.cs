@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using TourneyPlanner.API.DTOs;
+using TourneyPlanner.API.Models;
 using TourneyPlanner.API.Repositories;
 using TourneyPlanner.API.Services;
 
@@ -26,7 +27,7 @@ namespace TourneyPlanner.API.Controllers
 
         [HttpPost("[action]")]
         [AllowAnonymous]
-        public async Task<ActionResult> Register(AuthHandlerDto dto)
+        public async Task<ActionResult<TokenDto>> Register(AuthHandlerDto dto)
         {
             if(string.IsNullOrWhiteSpace(dto.Email)) 
             {
@@ -51,8 +52,10 @@ namespace TourneyPlanner.API.Controllers
             }
 
             await _userRepository.Create(dto);
+            UserDto? user = await _userRepository.GetByEmail(dto.Email);
+            TokenDto token = _tokenService.BuildNewToken((UserDto)user);
 
-            return Ok();
+            return Ok(token);
         }
 
         private bool ValidatePassword(string password)
