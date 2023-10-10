@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   config: {
-    apiUrl: 'http://localhost:7127',
-    loginFailedRoute:"http://localhost:4200",
+    apiUrl: 'https://localhost:7127',
+    loginFailedRoute:"https://localhost:4200",
     applicationJwtID:"TestCertificateAndJwtKomNuForHelvedeHvorMangeTegnSkalDerTil"
   }
 };
