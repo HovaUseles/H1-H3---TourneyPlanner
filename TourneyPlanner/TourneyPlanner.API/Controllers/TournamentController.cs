@@ -38,7 +38,7 @@ namespace TourneyPlanner.API.Controllers
             TournamentDto? tournament = await _tournamentRepository.GetById(id);
             if (tournament == null)
             {
-                return NotFound($"A tournament with Id: {id} does not exist. No record was deleted.");
+                return NotFound($"A tournament with Id: {id} does not exist.");
             }
             return Ok(tournament);
         }

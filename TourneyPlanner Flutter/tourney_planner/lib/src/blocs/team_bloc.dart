@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tourney_planner/src/datahandlers/team_datahandler.dart';
 import 'package:tourney_planner/src/events/team_event.dart';
 import 'package:tourney_planner/src/locators/setup_locator.dart';
+import 'package:tourney_planner/src/models/team.dart';
 import 'package:tourney_planner/src/states/team_state.dart';
 
 class TeamBloc extends Bloc<TeamEvent, TeamState> {
@@ -15,7 +16,8 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     final apiService = locator<TeamDataHandler>();
 
     try {
-      await apiService.getTeam(event.id);
+      TeamDto team = await apiService.getTeam(event.id);
+      emit(TeamState(state: TeamStates.completed, team: team ));
     } catch (e) {
       emit(TeamState(state: TeamStates.error));
     }

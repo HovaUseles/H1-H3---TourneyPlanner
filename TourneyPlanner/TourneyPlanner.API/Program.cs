@@ -71,6 +71,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
 builder.Services.AddScoped<ITournamentRepository, SqlTournamentRepository>();
 builder.Services.AddScoped<IMatchupRepository, SqlMatchupRepository>();
+builder.Services.AddScoped<ITeamRepository, SqlTeamRepository>();
 
 // Services
 builder.Services.AddScoped<IHashingService, HashingService>();

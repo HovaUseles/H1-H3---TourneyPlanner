@@ -3,9 +3,9 @@ import 'package:tourney_planner/src/models/team.dart';
 abstract class TeamEvent {}
 
 class TeamGetEvent implements TeamEvent {
-  final String _id;
+  final int _id;
 
-  String get id => _id;
+  int get id => _id;
 
   TeamGetEvent(this._id);
 }

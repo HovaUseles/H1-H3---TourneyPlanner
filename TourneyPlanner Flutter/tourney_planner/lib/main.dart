@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tourney_planner/src/blocs/team_bloc.dart';
 import 'package:tourney_planner/src/locators/setup_locator.dart';
 import 'package:tourney_planner/src/services/firebase_message_service.dart';
 import 'src/app.dart';
@@ -9,9 +11,7 @@ import 'src/services/settings_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupTournamentLocator();
-  setupAuthLocator();
-  setupUserLocator();
+  setupLocators();
   await Firebase.initializeApp();
 
   debugPrint(await getDeviceToken());
@@ -24,7 +24,8 @@ Future<void> main() async {
         debugPrint('Message also contained a notification: ${message.notification}');
       }
     });
-
+    
+  FirebaseMessaging.instance.subscribeToTopic("news");
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   // FirebaseMessaging.onBackgroundMessage((message) => )
   // Set up the SettingsController, which will glue user settings to multiple
@@ -38,7 +39,14 @@ Future<void> main() async {
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+  runApp( MultiBlocProvider(
+    providers: [
+      BlocProvider<TeamBloc>(
+        create: (context) => TeamBloc()
+      )
+    ], 
+    child: MyApp(settingsController: settingsController))
+    );
 }
 
 @pragma('vm:entry-point')
