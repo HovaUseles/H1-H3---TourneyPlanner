@@ -21,14 +21,16 @@ class PlayerDto {
 
   factory PlayerDto.fromMap(Map<String, dynamic> map) {
     return PlayerDto(
-        id: int.parse(map['id'] ?? 0),
+        // id: int.parse(map['id'] ?? 0),
+        id: map['id'] ?? 0,
         firstName: map['firstName'] ?? 'N/A',
         lastName: map['lastName'] ?? 'N/A',
         teamId: int.parse(map['lastName'] ?? 0));
   }
 
   factory PlayerDto.fromJson(Map<String, dynamic> json) {
-    int id = int.parse(json['id'] ?? 0);
+    // int id = int.parse(json['id'] ?? 0);
+    int id = json['id'] ?? 0;
     String firstName = json['firstName'] ?? 'N/A';
     String lastName = json['lastName'] ?? 'N/A';
     int teamId = int.parse(json['lastName'] ?? 0);

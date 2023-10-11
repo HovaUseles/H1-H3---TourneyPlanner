@@ -4,6 +4,15 @@ abstract class TournamentEvent {}
 
 class TournamentGetListEvent implements TournamentEvent {}
 
+class TournamentGetByIdEvent implements TournamentEvent {
+  
+  final int _id;
+
+  int get id => _id;
+
+  TournamentGetByIdEvent(this._id);
+}
+
 class TournamentGetMyListEvent implements TournamentEvent {
   final String _id;
 

@@ -1,12 +1,17 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tourney_planner/src/datahandlers/base_datahandler.dart';
 import 'package:tourney_planner/src/httpclient/set_http_client.dart';
 import 'package:tourney_planner/src/models/auth.dart';
 
-class UserDataHandler {
-  final baseUrl = 'https://10.0.2.2:27016/api/Tournament';
-  HttpClient httpClient = HttpClient();
+class UserDataHandler extends BaseDataHandler {
+
+  
+  @override
+  String get apiContext => "user";
+  // final baseUrl = 'https://10.0.2.2:27016/api/Tournament';
+  // HttpClient httpClient = HttpClient();
 
   Future<bool> postUserRegistration(AuthDto user) async {
     httpClient = await setHttpClient();
