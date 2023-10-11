@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tourney_planner/src/blocs/team_bloc.dart';
+import 'package:tourney_planner/src/blocs/tournament_bloc.dart';
 import 'package:tourney_planner/src/locators/setup_locator.dart';
 import 'package:tourney_planner/src/services/firebase_message_service.dart';
 import 'src/app.dart';
@@ -43,7 +44,10 @@ Future<void> main() async {
     providers: [
       BlocProvider<TeamBloc>(
         create: (context) => TeamBloc()
-      )
+      ),
+      BlocProvider<TournamentBloc>(
+        create: (context) => TournamentBloc()
+      ),
     ], 
     child: MyApp(settingsController: settingsController))
     );

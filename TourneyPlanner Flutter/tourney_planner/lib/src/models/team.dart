@@ -13,7 +13,7 @@ class TeamDto {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
     result.addAll({'type': id});
-    result.addAll({'name': name});
+    result.addAll({'teamName': name});
     result.addAll({'score': score});
     result.addAll({'players': players});
 
@@ -22,18 +22,16 @@ class TeamDto {
 
   factory TeamDto.fromMap(Map<String, dynamic> map) {
     return TeamDto(
-        // id: int.parse(map['id'] ?? 0),
         id: map['id'] ?? 0,
-        name: map['name'] ?? 'N/A',
+        name: map['teamName'] ?? 'N/A',
         score: map['score'] ?? 0,
         players: List<PlayerDto>.from(
             (map['players'] as List).map((i) => PlayerDto.fromJson(i))));
   }
 
   factory TeamDto.fromJson(Map<String, dynamic> json) {
-    // int id = int.parse(json['id'] ?? 0);
     int id = json['id'] ?? 0;
-    String name = json['name'] ?? 'N/A';
+    String name = json['teamName'] ?? 'N/A';
     int score = json['score'] ?? 0;
     List<PlayerDto> players = List<PlayerDto>.from(
         (json['players'] as List).map((i) => PlayerDto.fromJson(i)));

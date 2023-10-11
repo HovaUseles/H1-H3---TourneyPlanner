@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tourney_planner/src/models/team.dart';
+import 'package:tourney_planner/src/models/tournament.dart';
 import 'package:tourney_planner/src/screens/login/login_screen.dart';
 import 'package:tourney_planner/src/screens/team/team_screen.dart';
 import 'package:tourney_planner/src/screens/tournament/tournament_list_screen.dart';
@@ -125,7 +128,8 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
 
-          initialRoute: '/tournament',
+          // initialRoute: '/tournament/',
+          initialRoute: TournamentListScreen.routeName,
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
           onGenerateRoute: (RouteSettings routeSettings) {
@@ -139,7 +143,10 @@ class MyApp extends StatelessWidget {
                   widget: SettingsView(controller: settingsController),
                 );
               case TournamentScreen.routeName:
-                return SlideLeftRoute(widget: const TournamentScreen());
+                final args = routeSettings.arguments as Map<String, dynamic>;
+                int? tournamentId = args["tournamentId"];
+                if(tournamentId == null) throw Exception("Could not route, Tournament id was null");
+                return SlideLeftRoute(widget: TournamentScreen(tournamentId: tournamentId));
               case TeamScreen.routeName:
                 // final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
                 // TeamDto team = TeamDto.fromMap(args);

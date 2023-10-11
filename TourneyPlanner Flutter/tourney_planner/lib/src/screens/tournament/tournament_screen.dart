@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:tourney_planner/src/blocs/tournament_bloc.dart';
+import 'package:tourney_planner/src/events/tournament_event.dart';
 import 'package:tourney_planner/src/models/matchup.dart';
-import 'package:tourney_planner/src/models/player.dart';
 import 'package:tourney_planner/src/models/team.dart';
 import 'package:tourney_planner/src/models/tournament.dart';
 import 'package:tourney_planner/src/screens/team/team_screen.dart';
 import 'package:tourney_planner/src/screens/utility/custom_app_bar.dart';
+import 'package:tourney_planner/src/states/tournament_state.dart';
 
 class TournamentScreen extends StatefulWidget {
   final int tournamentId;
@@ -18,89 +21,18 @@ class TournamentScreen extends StatefulWidget {
 }
 
 class _TournamentState extends State<TournamentScreen> {
+
   final Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
-
+    
   final int tournamentId;
   _TournamentState(this.tournamentId);
 
-  late final TournamentDto tournament;
+  late TournamentDto tournament;
 
   @override
   void initState() {
     super.initState();
-    List<PlayerDto> players1 = [
-      PlayerDto(id: 1, firstName: 'fTest1', lastName: 'lTest1', teamId: 1),
-    ];
-    List<PlayerDto> players2 = [
-      PlayerDto(id: 2, firstName: 'fTest1', lastName: 'lTest1', teamId: 2),
-    ];
-    List<PlayerDto> players3 = [
-      PlayerDto(id: 3, firstName: 'fTest1', lastName: 'lTest1', teamId: 3),
-    ];
-    List<PlayerDto> players4 = [
-      PlayerDto(id: 4, firstName: 'fTest1', lastName: 'lTest1', teamId: 4),
-    ];
-    List<PlayerDto> players5 = [
-      PlayerDto(id: 5, firstName: 'fTest1', lastName: 'lTest1', teamId: 5),
-    ];
-    List<PlayerDto> players6 = [
-      PlayerDto(id: 6, firstName: 'fTest1', lastName: 'lTest1', teamId: 6),
-    ];
-    List<PlayerDto> players7 = [
-      PlayerDto(id: 7, firstName: 'fTest1', lastName: 'lTest1', teamId: 7),
-    ];
-    List<PlayerDto> players8 = [
-      PlayerDto(id: 8, firstName: 'fTest1', lastName: 'lTest1', teamId: 8),
-    ];
-    List<TeamDto> teams = [
-      TeamDto(id: 1, name: 'Team1', score: 0, players: players1),
-      TeamDto(id: 2, name: 'Team2', score: 0, players: players2),
-      TeamDto(id: 3, name: 'Team3', score: 0, players: players3),
-      TeamDto(id: 4, name: 'Team4', score: 0, players: players4),
-      TeamDto(id: 5, name: 'Team5', score: 0, players: players5),
-      TeamDto(id: 6, name: 'Team6', score: 0, players: players6),
-      TeamDto(id: 7, name: 'Team7', score: 0, players: players7),
-      TeamDto(id: 8, name: 'Team8', score: 0, players: players8)
-    ];
-
-    List<MatchupDto> matches = [
-      MatchupDto(
-          id: 1,
-          round: 1,
-          nextMatchupId: 5,
-          teams: teams.skip(0).take(2).toList()),
-      MatchupDto(
-          id: 2,
-          round: 1,
-          nextMatchupId: 5,
-          teams: teams.skip(2).take(2).toList()),
-      MatchupDto(
-          id: 3,
-          round: 1,
-          nextMatchupId: 6,
-          teams: teams.skip(4).take(2).toList()),
-      MatchupDto(
-          id: 4,
-          round: 1,
-          nextMatchupId: 6,
-          teams: teams.skip(6).take(2).toList()),
-      MatchupDto(id: 5, round: 2, nextMatchupId: 7, teams: []),
-      MatchupDto(id: 6, round: 2, nextMatchupId: 7, teams: []),
-      MatchupDto(id: 7, round: 3, nextMatchupId: null, teams: []),
-    ];
-
-    tournament = TournamentDto(
-        id: 1,
-        name: 'Test tournament',
-        startDate: DateTime.now(),
-        createdById: 1,
-        createdByName: 'Tester',
-        gameTypeId: 1,
-        gameTypeName: 'Football',
-        tournamentTypeId: 1,
-        tournamentTypeName: 'Knockout',
-        matchups: matches);
 
     // 1 = TOP_BOTTOM
     // 2 = BOTTOM_TOP
@@ -109,90 +41,110 @@ class _TournamentState extends State<TournamentScreen> {
     builder.orientation = BuchheimWalkerConfiguration.ORIENTATION_RIGHT_LEFT;
 
     // Can be used for styling seperation between edges depending on team amount in tournament
-    if (tournament.matchups.length <= 8) {
-      builder.siblingSeparation = 100;
-      builder.levelSeparation = 100;
-      builder.subtreeSeparation = 150;
-    }
-
-    //   // Fails if done in the same loop since it isn't guaranteed a nextMatchupId node has been created yet
-    // for (var element in tournament.matchups) {
-    //   graph.addNode(Node.Id(element.id));
-    // }
-    for (var element in tournament.matchups.reversed) {
-      if (element.nextMatchupId != null) {
-        // graph.addEdge(Node.Id(element.id), Node.Id(element.nextMatchupId));
-        graph.addEdge(Node.Id(element.nextMatchupId), Node.Id(element.id));
-      } else {
-        graph.addNode(Node.Id(element.id));
-      }
-      // if (element.nextMatchupId != 0) {}
-    }
-    // final test = graph.nodes;
-    // final test1 = graph.edges;
-    // final test2 = ".edges";
+    builder.siblingSeparation = 100;
+    builder.levelSeparation = 100;
+    builder.subtreeSeparation = 150;
   }
 
   @override
   Widget build(BuildContext context) {
+    TournamentBloc tourneyBloc = context.read<TournamentBloc>();
+    tourneyBloc.add(TournamentGetByIdEvent(tournamentId));
     return Scaffold(
-        appBar: customAppBar(context: context, title: tournament.name),
-        body: InteractiveViewer(
-            constrained: false,
-            boundaryMargin: EdgeInsets.all(100),
-            minScale: 0.01,
-            maxScale: 5.6,
-            child: GraphView(
-              graph: graph,
-              algorithm:
-                  BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-              paint: Paint()
-                ..color = Colors.green
-                ..strokeWidth = 1
-                ..style = PaintingStyle.stroke,
-              builder: (Node node) {
-                // I can decide what widget should be shown here based on the id
-                // var id = node.key!.value as String?;
-                var id = node.key!.value as int;
+      // appBar: customAppBar(context: context, title: tournament.name ),
+      appBar: customAppBar(context: context, title: "Dummy"),
+      body: BlocBuilder<TournamentBloc, TournamentCrudState>(
+        builder: (BuildContext context, TournamentCrudState state) {
+          if (state.currentState == TournamentStates.initial) {
+            tourneyBloc.add(TournamentGetByIdEvent(tournamentId));
+          }
+          if (state is TournamentState) {
+            if (state.currentState == TournamentStates.completed) {
+              tournament = (state as TournamentState).tournament!;
+              for (var element in tournament.matchups.reversed) {
+                if (element.nextMatchupId != null) {
+                  graph.addEdge(
+                      Node.Id(element.nextMatchupId), Node.Id(element.id));
+                } else {
+                  graph.addNode(Node.Id(element.id));
+                }
+              }
+              return InteractiveViewer(
+                constrained: false,
+                boundaryMargin: EdgeInsets.all(100),
+                minScale: 0.01,
+                maxScale: 5.6,
+                child: GraphView(
+                  graph: graph,
+                  algorithm: BuchheimWalkerAlgorithm(
+                      builder, TreeEdgeRenderer(builder)),
+                  paint: Paint()
+                    ..color = Colors.green
+                    ..strokeWidth = 1
+                    ..style = PaintingStyle.stroke,
+                  builder: (Node node) {
+                    // I can decide what widget should be shown here based on the id
+                    var id = node.key!.value as int;
+                    MatchupDto matchup = tournament.matchups
+                        .firstWhere((element) => element.id == id);
+                    List<TeamDto> thisTable = tournament.matchups
+                        .firstWhere((element) => element.id == id)
+                        .teams;
 
-                // List<TeamDto> thisTable = [
-                //   tournament.matchups.firstWhere((element) => element.id == id).teamA,
-                //   tournament.matchups.firstWhere((element) => element.id == id).teamB
-                // ];
-                MatchupDto matchup = tournament.matchups.firstWhere((element) => element.id == id);
-                List<TeamDto> thisTable = tournament.matchups
-                    .firstWhere((element) => element.id == id)
-                    .teams;
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(color: Colors.blue[100]!, spreadRadius: 1),
+                        ],
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: getTable(matchup),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            } 
+          }
 
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(color: Colors.blue[100]!, spreadRadius: 1),
-                    ],
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      // children: getTable(thisTable),
-                      children: getTable(matchup),
-                    ),
-                  ),
-                );
-              },
-            )));
+          if (state.currentState == TournamentStates.error) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("An Error Occured"),
+                ElevatedButton(
+                    onPressed: () => {
+                          tourneyBloc
+                              .add(TournamentGetByIdEvent(tournamentId))
+                        },
+                    child: Text("Try again."))
+              ],
+            ));
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
   }
 
+  // List<Widget> getTable(MatchupDto matchup) {
   List<Widget> getTable(MatchupDto matchup) {
-    List<Widget> teamWidgets = [
-      Text("Matchup ${matchup.id}")
-    ];
+    List<Widget> teamWidgets = [Text("Matchup ${matchup.id}")];
     for (TeamDto team in matchup.teams) {
       teamWidgets.add(
         Material(
           child: InkWell(
             onTap: () {
-              Navigator.restorablePushNamed(context, TeamScreen.routeName, arguments: { "teamId" : team.id } );
+              Navigator.restorablePushNamed(context, TeamScreen.routeName,
+                  arguments: {"teamId": team.id});
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -306,7 +258,6 @@ class _TournamentState extends State<TournamentScreen> {
   //         child: Text('${a}')),
   //   );
   // }
-
 
   // Widget createGraphWidget(
   //     List<TeamsPerMatchDto> matchData, List<TeamDto> teams) {

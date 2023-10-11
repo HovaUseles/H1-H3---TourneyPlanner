@@ -1,17 +1,15 @@
 import 'dart:convert';
 
 import 'package:tourney_planner/src/models/matchup.dart';
+import 'package:tourney_planner/src/models/user.dart';
 
 class TournamentDto {
   final int id;
   final String name;
   final DateTime startDate;
   final String tournamentTypeName;
-  final int tournamentTypeId;
   final String gameTypeName;
-  final int gameTypeId;
-  final String createdByName;
-  final int createdById;
+  final UserDto createdBy;
   final List<MatchupDto> matchups;
 
   TournamentDto(
@@ -19,11 +17,8 @@ class TournamentDto {
       required this.name,
       required this.startDate,
       required this.tournamentTypeName,
-      required this.tournamentTypeId,
       required this.gameTypeName,
-      required this.gameTypeId,
-      required this.createdByName,
-      required this.createdById,
+      required this.createdBy,
       required this.matchups});
 
   Map<String, dynamic> toMap() {
@@ -31,12 +26,9 @@ class TournamentDto {
     result.addAll({'id': id});
     result.addAll({'name': name});
     result.addAll({'startDate': startDate});
-    result.addAll({'tournamentTypeName': tournamentTypeName});
-    result.addAll({'tournamentTypeId': tournamentTypeId});
-    result.addAll({'gameTypeName': gameTypeName});
-    result.addAll({'gameTypeId': gameTypeId});
-    result.addAll({'createdByName': createdByName});
-    result.addAll({'createdById': createdById});
+    result.addAll({'tournamentType': tournamentTypeName});
+    result.addAll({'gameType': gameTypeName});
+    result.addAll({'createdBy': createdBy});
     result.addAll({'matchups': matchups});
 
     return result;
@@ -44,42 +36,33 @@ class TournamentDto {
 
   factory TournamentDto.fromMap(Map<String, dynamic> map) {
     return TournamentDto(
-        id: int.parse(map['id'] ?? 0),
+        id: map['id'] ?? 0,
         name: map['name'] ?? 'N/A',
         startDate: DateTime.parse(map['startDate'] ?? '01/01/1900'),
-        tournamentTypeName: map['tournamentTypeName'] ?? 'N/A',
-        tournamentTypeId: int.parse(map['tournamentTypeId'] ?? 0),
-        createdByName: map['createdByName'] ?? 'N/A',
-        createdById: int.parse(map['createdById'] ?? 0),
-        gameTypeName: map['gameTypeName'] ?? 'N/A',
-        gameTypeId: int.parse(map['gameTypeId'] ?? 0),
+        tournamentTypeName: map['tournamentType'] ?? 'N/A',
+        createdBy: UserDto.fromMap(map['createdBy']),
+        gameTypeName: map['gameType'] ?? 'N/A',
         matchups: List<MatchupDto>.from(
-            (map['teams'] as List).map((i) => MatchupDto.fromJson(i))));
+            (map['matchups'] as List).map((i) => MatchupDto.fromJson(i))));
   }
 
   factory TournamentDto.fromJson(Map<String, dynamic> json) {
-    int id = int.parse(json['id'] ?? 0);
+    int id = json['id'] ?? 0;
     String name = json['name'] ?? 'N/A';
     DateTime startDate = DateTime.parse(json['startDate'] ?? '01/01/1900');
-    String tournamentTypeName = json['tournamentTypeName'] ?? 'N/A';
-    int tournamentTypeId = int.parse(json['tournamentTypeId'] ?? 0);
-    String createdByName = json['createdByName'] ?? 'N/A';
-    int createdById = int.parse(json['createdById'] ?? 0);
-    String gameTypeName = json['gameTypeName'] ?? 'N/A';
-    int gameTypeId = int.parse(json['gameTypeId'] ?? 0);
+    String tournamentTypeName = json['tournamentType'] ?? 'N/A';
+    UserDto createdBy = UserDto.fromJson(json['createdBy']);
+    String gameTypeName = json['gameType'] ?? 'N/A';
     List<MatchupDto> matchups = List<MatchupDto>.from(
-        (json['teams'] as List).map((i) => MatchupDto.fromJson(i)));
+        (json['matchups'] as List).map((i) => MatchupDto.fromJson(i)));
 
     return TournamentDto(
         id: id,
         name: name,
         startDate: startDate,
         tournamentTypeName: tournamentTypeName,
-        tournamentTypeId: tournamentTypeId,
-        createdByName: createdByName,
-        createdById: createdById,
+        createdBy: createdBy,
         gameTypeName: gameTypeName,
-        gameTypeId: gameTypeId,
         matchups: matchups);
   }
 
