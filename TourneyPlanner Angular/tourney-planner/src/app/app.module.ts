@@ -49,6 +49,7 @@ import { UserTournamentComponent } from './components/user-tournament/user-tourn
 import { RegisterComponent } from './components/register/register.component';
 import { TournamentUpdateComponent } from './components/tournament-update/tournament-update.component';
 import { TournamentCreateComponent } from './components/tournament-create/tournament-create.component';
+import { MatchComponent } from './components/match/match.component';
 
 declare global {
   interface Window {
@@ -67,7 +68,8 @@ declare global {
     UserTournamentComponent,
     RegisterComponent,
     TournamentUpdateComponent,
-    TournamentCreateComponent
+    TournamentCreateComponent,
+    MatchComponent
   ],
   imports: [
     BrowserModule,

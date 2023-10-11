@@ -43,6 +43,7 @@ export class TournamentService {
       headers: headers
     };
     this.httpClient.get<Tournament>(this.url + '/' + id, httpOptions).subscribe(x => {
+      console.log(x)
       this.tournamentDetailsSubject$.next(x);
     });
   };
