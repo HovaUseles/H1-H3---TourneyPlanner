@@ -206,7 +206,7 @@ namespace TourneyPlanner.API.Repositories
                     Id = tournament.User.Id,
                     Email = tournament.User.Email
                 },
-                Matchups = tournament.Matchups?.ToList().ConvertAll<MatchupDto>(m =>
+                Matchups = tournament.Matchups.Reverse().ToList().ConvertAll<MatchupDto>(m =>
                 {
                     return new MatchupDto
                     {
