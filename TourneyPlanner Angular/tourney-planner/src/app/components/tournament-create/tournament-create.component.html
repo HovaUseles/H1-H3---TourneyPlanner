@@ -1,1 +1,108 @@
-<p>tournament-create works!</p>
+<mat-stepper>
+
+  <div style="display:flex; justify-content: end; width: 100%;">
+
+    <button mat-icon-button (click)="closeDialog()"><mat-icon>close</mat-icon></button>
+
+  </div>
+
+  <mat-step [stepControl]="tournamentDetailsFormGroup">
+    <form [formGroup]="tournamentDetailsFormGroup">
+      <ng-template matStepLabel>Tournament details</ng-template>
+
+      <mat-form-field appearance="outline">
+        <input matInput formControlName="name" placeholder="Tournament name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Game type</mat-label>
+        <mat-option formControlName="gameType">
+          <mat-select [value]="1">
+            Football
+          </mat-select>
+        </mat-option>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tournament type</mat-label>
+        <mat-option formControlName="type">
+          <mat-select [value]="1">
+            Knockout
+          </mat-select>
+        </mat-option>
+      </mat-form-field>
+
+      <button mat-button matStepperNext>Next</button>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="teamsFormGroup">
+    <form [formGroup]="teamsFormGroup">
+      <ng-template matStepLabel>Tournament teams</ng-template>
+
+      <ng-container formArrayName="teams" *ngFor="let team of teams.controls; index as i">
+
+        <ng-container [formGroupName]="i">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Team name</mat-label>
+            <input matInput formControlName="name" placeholder="Team name">
+          </mat-form-field>
+
+          <ng-container formArrayName="players" *ngFor="let player of players.controls; index as i">
+
+            <ng-container [formGroupName]="i">
+
+              <mat-form-field appearance="outline">
+                <mat-label>First name</mat-label>
+                <input matInput formControlName="firstName" placeholder="First name">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Last name</mat-label>
+                <input matInput formControlName="name" placeholder="Team name">
+              </mat-form-field>
+
+              <button mat-icon-button type="button" (click)="removeTeamField(i)"><mat-icon>close</mat-icon></button>
+
+            </ng-container>
+
+          </ng-container>
+
+          <div style="display: flex; justify-content: space-between;">
+
+            <button class="btn-add" type="button" (click)="addPlayerField()">Add player</button>
+
+            <button class="btn-reset" type="button" (click)="resetPlayers()">Reset all</button>
+
+          </div>
+
+          <button mat-icon-button type="button" (click)="removeTeamField(i)"><mat-icon>close</mat-icon></button>
+
+        </ng-container>
+
+      </ng-container>
+
+      <div style="display: flex; justify-content: space-between;">
+
+        <button class="btn-add" type="button" (click)="addTeamField()">Add team</button>
+
+        <button class="btn-reset" type="button" (click)="resetTeams()">Reset all</button>
+
+      </div>
+
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </form>
+  </mat-step>
+
+  <!-- Step 3: Tournament Confirmation -->
+  <mat-step>
+    <ng-template matStepLabel>Confirmation</ng-template>
+    <!-- Display a summary of tournament details for confirmation -->
+    <p>Tournament Name: {{ tournamentDetailsFormGroup.value.name }}</p>
+    <!-- Display other details for confirmation -->
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-button (click)="createTournament()">Create tournament</button>
+  </mat-step>
+</mat-stepper>

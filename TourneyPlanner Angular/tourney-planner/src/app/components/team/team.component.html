@@ -1,1 +1,59 @@
-<p>team works!</p>
+<div style="display:flex; justify-content: space-evenly;">
+
+  <mat-card
+    style="align-items: center; min-width: 33%; max-width: 33%; height: fit-content; padding: 20px; margin-top: 20px; background-color: lightcyan;">
+
+    <table mat-table [dataSource]="homeTeamPlayers" class="mat-elevation-z8" style="width: 100%;">
+
+      <ng-container matColumnDef="Id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="First name">
+        <th mat-header-cell *matHeaderCellDef> First name </th>
+        <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Last name">
+        <th mat-header-cell *matHeaderCellDef> Last name </th>
+        <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+  </mat-card>
+
+    <div style="font-size: 250%; font-weight: 800; min-width: 6%; max-width: 6%; text-align: center; margin-top: 30px;">Rosters</div>
+
+  <mat-card
+    style="align-items: center; min-width: 33%; max-width: 33%; height: fit-content; padding: 20px; margin-top: 20px; background-color: lightcyan;">
+
+    <table mat-table [dataSource]="awayTeamPlayers" class="mat-elevation-z8" style="width: 100%;">
+
+      <ng-container matColumnDef="Id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="First name">
+        <th mat-header-cell *matHeaderCellDef> First name </th>
+        <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Last name">
+        <th mat-header-cell *matHeaderCellDef> Last name </th>
+        <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+  </mat-card>
+
+</div>

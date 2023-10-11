@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { CreateTournament } from 'src/app/interfaces/create-tournament';
 import { Tournament } from 'src/app/interfaces/tournament';
 import { SetHttpHeader } from 'src/app/utility/set-http-header';
 import { environment } from 'src/environments/environment';
@@ -48,7 +49,7 @@ export class TournamentService {
     });
   };
 
-  createTournament(tournament: Tournament) {
+  createTournament(tournament: CreateTournament) {
     this.httpClient.post<Tournament[]>(this.url, tournament, { headers: this.setHttpHeader.setAuthHeader() },).subscribe(x => {
       this.tournamentSubject$.next(x);
     });

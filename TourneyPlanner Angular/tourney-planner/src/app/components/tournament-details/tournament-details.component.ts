@@ -9,6 +9,7 @@ import { BracketService } from 'src/services/bracket.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MatchupService } from 'src/services/matchup.service';
+import { TeamService } from 'src/services/team.service';
 
 @Component({
   selector: 'app-tournament-details',
@@ -22,14 +23,21 @@ export class TournamentDetailsComponent {
   teams: Team[] = [];
   tournamentName = "";
 
-  constructor(private tournamentService: TournamentService, private bracketService: BracketService, private router: Router, private matchupService: MatchupService) {
+  constructor(private tournamentService: TournamentService, private bracketService: BracketService, private router: Router, private matchupService: MatchupService, private teamService: TeamService) {
     this.tournamentService.tournamentDetails$.subscribe(x => {
       this.tournamentName = x.name;
       x.matchups.forEach(element => {
         if (element.teams.length > 0) {
+          if (element.teams.filter((team) => {team.id == element.teams[0].id}).length == 0) {
+            this.teams.push(element.teams[0]);
+          }
+          else if (element.teams.filter((team) => {team.id == element.teams[1].id}).length == 0) {
+            this.teams.push(element.teams[1]);
+          }
           this.matchups.push(element);
         }
       });
+      this.teamService.setAttendingTeamList(this.teams);
       this.dataSource.data = this.matchups;
     });
   };
@@ -61,6 +69,7 @@ export class TournamentDetailsComponent {
 
   goToMatchPage(match: Matchup) {
     this.matchupService.setMatch(match);
+    this.teamService.SetMatchTeamList(match.teams);
     this.router.navigateByUrl("/Match");
   };
 };

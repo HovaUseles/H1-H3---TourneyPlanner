@@ -45,7 +45,7 @@ export class BracketService {
         };
       };
     };
-  }
+  };
 
   async setStorageData(tournamentId: number, tournamentName: string) {
     let stageType: StageType = 'single_elimination';
