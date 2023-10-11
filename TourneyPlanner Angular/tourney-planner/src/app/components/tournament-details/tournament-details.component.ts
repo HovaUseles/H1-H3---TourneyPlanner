@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { InMemoryDatabase } from "brackets-memory-db";
-import { BracketsManager } from "brackets-manager";
-import { Participant, Result, Status, Match, ParticipantResult, Id } from 'brackets-model';
+import { BracketsManager, StageCreator } from "brackets-manager";
+import { Participant, Result, Status, Match, ParticipantResult, Id, Stage, StageType, StageSettings } from 'brackets-model';
 import { TournamentService } from 'src/services/tournament.service';
 import { Tournament } from 'src/app/interfaces/tournament';
 import { Team } from 'src/app/interfaces/team';
@@ -38,13 +38,12 @@ export class TournamentDetailsComponent {
   async convertToBracketObjects(tournament: Tournament) {
     this.setTeamArray(tournament.id, tournament.matchups);
 
-    this.setStorageData(tournament.id)
+    this.setStorageData(tournament.id, tournament.name);
 
-    await this.createStage(tournament.name, tournament.id);
+    // await this.createStage(tournament.name, tournament.id);
 
     for (let match of tournament.matchups) {
       if (match.teams.length > 0) {
-        console.log(match.teams)
         this.setMatchups(match);
       };
     };
@@ -56,9 +55,7 @@ export class TournamentDetailsComponent {
 
   setTeamArray(tournamentId: number, matchups: Matchup[]) {
     for (let matchup of matchups) {
-
       for (let teamData of matchup.teams) {
-
         if (this.teams.filter((x) => { x.id == teamData.id }).length == 0) {
           this.teams.push({ id: teamData.id, teamName: teamData.teamName, players: teamData.players });
           this.participants.push({ id: teamData.id, name: teamData.teamName, tournament_id: tournamentId })
@@ -67,36 +64,38 @@ export class TournamentDetailsComponent {
     };
   }
 
-  setStorageData(tournamentId: number) {
+  setStorageData(tournamentId: number, tournamentName: string) {
+    let stageType: StageType = 'single_elimination';
+    let stageSettings: StageSettings = {balanceByes: true, grandFinal: 'simple', consolationFinal: true, size: this.getNearestPowerOfTwo(this.teams.length), seedOrdering: ['inner_outer']};
+    let stage: Stage = {id: 0, tournament_id: tournamentId, type: stageType, name: tournamentName, number: 0, settings: stageSettings};
+
     this.storage.setData({
       participant: this.participants.map((team) => ({
         ...team,
         tournament_id: tournamentId,
       })),
-      stage: [],
+      stage: [stage],
       group: [],
       round: [],
-      match: [],
+      match: this.matches,
       match_game: [],
     });
   };
 
-  async createStage(tournamentName: string, tournamentId: number) {
-    await this.manager.create.stage({
-      name: tournamentName,
-      tournamentId: tournamentId,
-      type: 'single_elimination',
-
-      seeding: this.teams.map((team) => team.teamName),
-      settings: {
-        seedOrdering: ['inner_outer'],
-        size: this.getNearestPowerOfTwo(this.teams.length),
-      },
-    });
-  }
+  // async createStage(tournamentName: string, tournamentId: number) {
+  //   await this.manager.create.stage({
+  //     name: tournamentName,
+  //     tournamentId: tournamentId,
+  //     type: 'single_elimination',
+  //     seeding: this.teams.map((team) => team.teamName),
+  //     settings: {
+  //       seedOrdering: ['inner_outer'],
+  //       size: this.getNearestPowerOfTwo(this.teams.length),
+  //     },
+  //   });
+  // }
 
   setMatchups(match: Matchup) {
-
     if (match.teams.length > 0) {
       let result1: Result = 'draw';
       let result2: Result = 'draw';
@@ -199,15 +198,21 @@ export class TournamentDetailsComponent {
   // };
 
   async bracketViewerConfiguration() {
-    window.bracketsViewer.addLocale('en', {
-      // common: {
-      //   'group-name-winner-bracket': '{{stage.name}}',
-      // },
-      // 'origin-hint': {
-      //   'winner-bracket-semi-final': 'Semi final {{position}}',
-      //   'winner-bracket-final': 'Grand final',
-      // },
-    });
+    // window.bracketsViewer.onMatchClicked = async (match: Match) => {
+    //   console.log(match)
+    // }
+
+    // window.bracketsViewer.addLocale('en', {
+    //   // common: {
+    //   //   'group-name-winner-bracket': '{{stage.name}}',
+    //   // },
+    //   // 'origin-hint': {
+    //   //   'winner-bracket-semi-final': 'Semi final {{position}}',
+    //   //   'winner-bracket-final': 'Grand final',
+    //   // },
+    // });
+
+    window.bracketsViewer.
 
     window.bracketsViewer.setParticipantImages(this.teams.map(participant => ({
       participantId: participant.id,
@@ -216,16 +221,19 @@ export class TournamentDetailsComponent {
 
     const data = await this.manager.get.stageData(0);
 
+    console.log(data)
+
     window.bracketsViewer.render({
       stages: data.stage,
       matches: data.match,
       matchGames: data.match_game,
       participants: data.participant
     }, {
+      clear: true,
       onMatchClick: () => { this.goToMatchPage() },
-      // participantOriginPlacement: 'before',
-      // separatedChildCountLabel: true,
-      // showSlotsOrigin: true,
+      participantOriginPlacement: 'before',
+      separatedChildCountLabel: true,
+      showSlotsOrigin: true,
       highlightParticipantOnHover: true,
     })
   }
