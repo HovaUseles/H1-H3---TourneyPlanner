@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class AuthenticationService {
   url: string = environment.config.apiUrl + "/api/auth";
   registerEndpoint: string = "/register";
+  loginEndpoint: string = "/login";
 
   private loggedInSubject$: Subject<boolean> = new BehaviorSubject<boolean>(false);
   loggedIn$: Observable<boolean> = this.loggedInSubject$.asObservable();
@@ -18,7 +19,7 @@ export class AuthenticationService {
   constructor(private httpClient: HttpClient) { };
 
   getToken(login: Auth) {
-    this.httpClient.post<Token>(this.url, login).subscribe(x => {
+    this.httpClient.post<Token>(this.url + this.loginEndpoint, login).subscribe(x => {
       this.checkResponse(x);
     });
   };

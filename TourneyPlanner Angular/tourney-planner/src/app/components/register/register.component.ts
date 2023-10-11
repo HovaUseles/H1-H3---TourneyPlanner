@@ -37,7 +37,7 @@ export class RegisterComponent {
       return 'You must enter a value';
     }
     else if (this.password.hasError("pattern")) {
-      return 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
+      return 'Password must contain at least one uppercase letter, one lowercase letter, one number or one special character'
     }
 
     return this.password.hasError('minlength') ? 'Must be atleast 6 characters' : '';

@@ -1,8 +1,8 @@
-import { TeamsPerMatch } from "./teams-per-match";
+import { Team } from "./team";
 
 export interface Matchup {
   id: number;
   round: number;
   nextMatchupId?: number;
-  teamsPerMatch: TeamsPerMatch[];
+  teams: Team[];
 }

@@ -14,6 +14,17 @@ export class TournamentService {
   private tournamentSubject$: Subject<Tournament[]> = new BehaviorSubject<Tournament[]>(this.tournaments);
   tournaments$: Observable<Tournament[]> = this.tournamentSubject$.asObservable();
 
+  tournamentDetails = (): Tournament => ({
+    id: 0,
+    name: '',
+    gameType: '',
+    matchups: [],
+    startDate: new Date(),
+    type: '',
+  });
+  private tournamentDetailsSubject$: Subject<Tournament> = new BehaviorSubject<Tournament>(this.tournamentDetails());
+  tournamentDetails$: Observable<Tournament> = this.tournamentDetailsSubject$.asObservable();
+
   constructor(public httpClient: HttpClient, private setHttpHeader: SetHttpHeader) { }
 
   getTournaments() {
@@ -26,8 +37,18 @@ export class TournamentService {
     });
   };
 
+  getTournamentDetails(id: string) {
+    const headers = this.setHttpHeader.setAuthHeader();
+    const httpOptions = {
+      headers: headers
+    };
+    this.httpClient.get<Tournament>(this.url + '/' + id, httpOptions).subscribe(x => {
+      this.tournamentDetailsSubject$.next(x);
+    });
+  };
+
   createTournament(tournament: Tournament) {
-    this.httpClient.post<Tournament[]>(this.url, tournament, {headers: this.setHttpHeader.setAuthHeader()},).subscribe(x => {
+    this.httpClient.post<Tournament[]>(this.url, tournament, { headers: this.setHttpHeader.setAuthHeader() },).subscribe(x => {
       this.tournamentSubject$.next(x);
     });
   };

@@ -5,6 +5,8 @@ import { Tournament } from 'src/app/interfaces/tournament';
 import { TournamentService } from 'src/services/tournament.service';
 import { UpsertTournamentComponent } from '../upsert-tournament/upsert-tournament.component';
 import { Observable } from 'rxjs';
+import { TournamentUpdateComponent } from 'src/app/components/tournament-update/tournament-update.component';
+import { TournamentCreateComponent } from 'src/app/components/tournament-create/tournament-create.component';
 
 @Component({
   selector: 'app-user-tournament',
@@ -26,7 +28,7 @@ export class UserTournamentComponent {
   };
 
   CreateTournament() {
-    this.matDialog.open(UpsertTournamentComponent, {
+    this.matDialog.open(TournamentCreateComponent, {
       width: '50%',
       disableClose: true,
       data: null
@@ -34,7 +36,7 @@ export class UserTournamentComponent {
   };
 
   EditTournament(tournament: Tournament) {
-    this.matDialog.open(UpsertTournamentComponent, {
+    this.matDialog.open(TournamentUpdateComponent, {
       width: '50%',
       disableClose: true,
       data: tournament

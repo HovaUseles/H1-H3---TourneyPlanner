@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Models;
 using TourneyPlanner.API.Repositories;
 using TourneyPlanner.API.Services;
@@ -28,9 +25,9 @@ builder.Services.AddAuthentication(opt =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "https://localhost:7172",
-        ValidAudience = "https://localhost:7172",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TestCertificateAndJwtKomNuForHelvedeHvorMangeTegnSkalDerTil"))
+        ValidIssuer = "https://localhost:7127",
+        ValidAudience = "https://localhost:7127",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"]!)),
     };
 });
 builder.Services.AddControllers();

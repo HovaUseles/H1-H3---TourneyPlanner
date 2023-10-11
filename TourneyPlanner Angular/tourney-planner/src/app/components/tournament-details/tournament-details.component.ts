@@ -1,52 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { InMemoryDatabase } from "brackets-memory-db";
 import { BracketsManager } from "brackets-manager";
-import { StageType } from 'brackets-model';
+import { Participant, Result, Status, Match, ParticipantResult } from 'brackets-model';
+import { TournamentService } from 'src/services/tournament.service';
+import { Tournament } from 'src/app/interfaces/tournament';
+import { Team } from 'src/app/interfaces/team';
+import { Matchup } from 'src/app/interfaces/matchup';
 
 @Component({
   selector: 'app-tournament-details',
   templateUrl: './tournament-details.component.html',
   styleUrls: ['./tournament-details.component.css']
 })
-export class TournamentDetailsComponent implements OnInit {
-  TOURNAMENT_ID = 0;
+export class TournamentDetailsComponent {
   storage = new InMemoryDatabase();
   manager = new BracketsManager(this.storage);
+  tournament?: Tournament;
+  teams: Team[] = [];
+  participants: Participant[] = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
-    window.bracketsViewer.addLocale('en', {
-      common: {
-        'group-name-winner-bracket': '{{stage.name}}',
-      },
-      'origin-hint': {
-        'winner-bracket': 'WB {{round}}.{{position}}',
-        'winner-bracket-semi-final': 'Semi final {{position}}',
-        'winner-bracket-final': 'Grand final',
-      },
+  constructor(private tournamentService: TournamentService) {
+    this.tournamentService.tournamentDetails$.subscribe(x => {
+      this.tournament = x;
+      if (this.tournament.id != 0) {
+        this.convertToBracketObjects(this.tournament);
+      };
     });
+  };
 
-    // window.bracketsViewer.setParticipantImages(data.participant.map(participant => ({
-    //   participantId: participant.id,
-    //   imageUrl: 'https://github.githubassets.com/pinned-octocat.svg',
-    // })));
+  async convertToBracketObjects(tournament: Tournament) {
+    this.setTeamArray(tournament.id, tournament.matchups);
 
-    this.process(new Dataset()).then((data) => window.bracketsViewer.render(data));
-      // { data },
-      // {
-      //   participantOriginPlacement: 'before',
-      //   separatedChildCountLabel: true,
-      //   showSlotsOrigin: true,
-      //   highlightParticipantOnHover: true,
-      // }));
+    this.setStorageData(tournament.id)
+
+    await this.createStage(tournament.name, tournament.id);
+
+    this.setMatchResults(tournament.matchups);
+
+    await this.bracketViewerConfiguration();
   }
 
-  async process(dataset: Dataset) {
+  setTeamArray(tournamentId: number, matchups: Matchup[]) {
+    for (let matchup of matchups) {
+
+      for (let teamData of matchup.teams) {
+
+        if (this.teams.filter((x) => { x.id == teamData.id }).length == 0) {
+          this.teams.push({ id: teamData.id, teamName: teamData.teamName, players: teamData.players });
+          this.participants.push({ id: teamData.id, name: teamData.teamName, tournament_id: tournamentId })
+        };
+      };
+      console.log(this.teams)
+    };
+  }
+
+  setStorageData(tournamentId: number) {
     this.storage.setData({
-      participant: dataset.roster.map((player) => ({
-        ...player,
-        tournament_id: this.TOURNAMENT_ID,
+      participant: this.participants.map((team) => ({
+        ...team,
+        tournament_id: tournamentId,
       })),
       stage: [],
       group: [],
@@ -54,50 +66,99 @@ export class TournamentDetailsComponent implements OnInit {
       match: [],
       match_game: [],
     });
+  };
 
+  async createStage(tournamentName: string, tournamentId: number) {
     await this.manager.create.stage({
-      name: dataset.title,
-      tournamentId: this.TOURNAMENT_ID,
-      type: dataset.type,
-      seeding: dataset.roster.map((player) => player.name),
+      name: tournamentName,
+      tournamentId: tournamentId,
+      type: 'single_elimination',
+
+      seeding: this.teams.map((team) => team.teamName),
       settings: {
         seedOrdering: ['inner_outer'],
-        size: this.getNearestPowerOfTwo(dataset.roster.length),
+        size: this.getNearestPowerOfTwo(this.teams.length),
       },
     });
+  }
 
-    await this.manager.update.match({
-      id: 0, // First match of winner bracket (round 1)
-      opponent1: { score: 4, result: 'win' },
-      opponent2: { score: 2 },
+  async setMatchResults(matches: Matchup[]) {
+    for (let match of matches) {
+      let result1: Result = 'draw';
+      let result2: Result = 'draw';
+
+      if (match.teams.length > 0) {
+        if (match.teams[0].score != undefined && match.teams[1].score != undefined) {
+          if (match.teams[0].score! > match.teams[1].score) {
+            result1 = 'win';
+            result1 = 'loss';
+          }
+          else if (match.teams[0].score! < match.teams[1].score) {
+            result1 = 'loss';
+            result1 = 'win';
+          };
+        };
+
+        let temp: Match = {
+          id: match.id,
+          status: Status.Completed,
+          round_id: match.round,
+          child_count: 0,
+          group_id: 0,
+          number: 0,
+          stage_id: 0,
+          opponent1: { id: match.teams[0].id, score: match.teams[0].score, result: result1 },
+          opponent2: { id: match.teams[1].id, score: match.teams[1].score, result: result2 }
+        };
+
+        this.storage.update<Match>('match', match.id, temp);
+
+        // await this.manager.update.match({
+        //   id: match.id,
+        //   opponent1: { score: match.teams[0].score, result: result1 },
+        //   opponent2: { score: match.teams[1].score, result: result2 }
+        // });
+      };
+    };
+  };
+
+  async bracketViewerConfiguration() {
+    window.bracketsViewer.addLocale('en', {
+      // common: {
+      //   'group-name-winner-bracket': '{{stage.name}}',
+      // },
+      // 'origin-hint': {
+      //   'winner-bracket-semi-final': 'Semi final {{position}}',
+      //   'winner-bracket-final': 'Grand final',
+      // },
     });
+
+    window.bracketsViewer.setParticipantImages(this.teams.map(participant => ({
+      participantId: participant.id,
+      imageUrl: 'https://github.githubassets.com/pinned-octocat.svg',
+    })));
 
     const data = await this.manager.get.stageData(0);
 
-    return {
+    window.bracketsViewer.render({
       stages: data.stage,
       matches: data.match,
       matchGames: data.match_game,
-      participants: data.participant,
-    };
+      participants: data.participant
+    }, {
+      onMatchClick: () => {this.goToMatchPage()},
+      // participantOriginPlacement: 'before',
+      // separatedChildCountLabel: true,
+      // showSlotsOrigin: true,
+      highlightParticipantOnHover: true,
+    })
   }
 
   getNearestPowerOfTwo(input: number): number {
     return Math.pow(2, Math.ceil(Math.log2(input)));
   }
-}
 
-export class Dataset {
-  title = '8 competitor tournament';
-  type: StageType = 'single_elimination';
-  roster = [
-    { id: 7, name: 'Team 1' },
-    { id: 55, name: 'Team 2' },
-    { id: 53, name: 'Team 3' },
-    { id: 523, name: 'Team 4' },
-    { id: 123, name: 'Team 5' },
-    { id: 353, name: 'Team 6' },
-    { id: 354, name: 'Team 7' },
-    { id: 355, name: 'Team 8' },
-  ];
-};
+  goToMatchPage() {
+    console.log("test")
+  }
+}
