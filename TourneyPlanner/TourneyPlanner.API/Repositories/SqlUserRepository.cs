@@ -22,7 +22,7 @@ namespace TourneyPlanner.API.Repositories
             _saltService = saltService;
         }
 
-        public async Task Create(AuthHandlerDto registerDto)
+        public async Task<UserDto> Create(AuthHandlerDto registerDto)
         {
             User? usernameExist = _context.Users.FirstOrDefault(u => u.Email == registerDto.Email);
             if(usernameExist != null)
@@ -42,7 +42,12 @@ namespace TourneyPlanner.API.Repositories
 
             await _context.AddAsync( user );
             await _context.SaveChangesAsync();
-            return;
+
+            return new UserDto 
+            { 
+                Id = user.Id,
+                Email = user.Email,
+            };
         }
 
         public async Task Delete(int id)

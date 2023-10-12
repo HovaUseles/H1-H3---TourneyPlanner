@@ -51,8 +51,7 @@ namespace TourneyPlanner.API.Controllers
                 return BadRequest("Password not strong enough. Must be atleast 8 characters long and contain atleast 1 lowercase, 1 uppercase and either 1 number or 1 special character.");
             }
 
-            await _userRepository.Create(dto);
-            UserDto? user = await _userRepository.GetByEmail(dto.Email);
+            UserDto? user = await _userRepository.Create(dto);
             TokenDto token = _tokenService.BuildNewToken((UserDto)user);
 
             return Ok(token);

@@ -71,9 +71,15 @@ namespace TourneyPlanner.Tests.UnitTests.ControllerTests
                     Password = "NewPassword1"
                 };
                 UserDto? userNotFound = null;
+                UserDto userFound = new UserDto()
+                {
+                    Id = 1,
+                    Email = dto.Email
+                };
 
                 var mock = GetUserRepoMock();
                 mock.Setup(x => x.GetByEmail(It.IsAny<string>())).ReturnsAsync(userNotFound);
+                mock.Setup(x => x.Create(It.IsAny<AuthHandlerDto>())).ReturnsAsync(userFound);
                 var sut = GetSut(mock);
 
                 // Act

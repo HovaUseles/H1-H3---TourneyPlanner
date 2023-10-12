@@ -8,7 +8,7 @@ namespace TourneyPlanner.API.Repositories
         public Task<UserDto?> GetById(int id);
         public Task<UserDto?> GetByEmail(string email);
         public Task<bool> VerifyLogin(AuthHandlerDto loginDto);
-        public Task Create(AuthHandlerDto registerDto);
+        public Task<UserDto> Create(AuthHandlerDto registerDto);
         public Task Delete(int id);
     }
 }
