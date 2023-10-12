@@ -36,9 +36,9 @@ flutter:
   generate: true
 
   assets:
-    - 'assets/localhost+3-client.p12'
-    - 'assets/localhost+3-key.pem'
-    - 'assets/localhost+3.pem'
+    - 'assets/tourney-planner+5-client.p12'
+    - 'assets/tourney-planner+5-client.pem'
+    - 'assets/tourney-planner+5-client-key.pem'
     - 'assets/logo_placeholder.jpg'
     - 'assets/user_logo.jpg'
     - 'assets/logo.png'

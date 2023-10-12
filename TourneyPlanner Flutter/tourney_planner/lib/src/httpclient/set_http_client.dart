@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 
 Future<HttpClient> setHttpClient() async {
   ByteData trustedCertificate =
-      await rootBundle.load('assets/localhost+3-client.p12');
+      await rootBundle.load('assets/tourney-planner+5-client.p12');
   ByteData certificateChain =
-      await rootBundle.load('assets/localhost+3.pem');
+      await rootBundle.load('assets/tourney-planner+5-client.pem');
   ByteData privateKey =
-      await rootBundle.load('assets/localhost+3-key.pem');
+      await rootBundle.load('assets/tourney-planner+5-client-key.pem');
   List<int> trustedCertificateBytes = trustedCertificate.buffer.asUint8List(
       trustedCertificate.offsetInBytes, trustedCertificate.lengthInBytes);
   List<int> certificateChainBytes = certificateChain.buffer.asUint8List(
@@ -19,6 +19,8 @@ Future<HttpClient> setHttpClient() async {
       password: 'changeit');
   context.useCertificateChainBytes(certificateChainBytes, password: 'changeit');
   context.usePrivateKeyBytes(privateKeyBytes, password: 'changeit');
+
+
   return HttpClient(context: context)
    ..badCertificateCallback =
        (X509Certificate cert, String host, int port) => true;

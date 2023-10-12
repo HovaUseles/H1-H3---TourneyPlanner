@@ -119,19 +119,37 @@ namespace TourneyPlanner.API.Repositories
             // Find winner and add to the next matchup, if it exists
             if(match.NextMatchupId != null)
             {
-                Team winningTeam = match.MatchupTeams
-                    .OrderByDescending(mt => mt.Score).First().Team;
+                Matchup nextMatchup = await _context.Matchups
+                    .Include(m => m.MatchupTeams)
+                        .ThenInclude(mt => mt.Team)
+                    .Include(m => m.InverseNextMatchup)
+                        .ThenInclude(m => m.MatchupTeams)
+                            .ThenInclude(mt => mt.Team)
+                    .FirstAsync(m => m.Id == match.NextMatchupId);
 
-                Matchup nextMatchup = await _context.Matchups.FindAsync(match.NextMatchupId);
+                _context.MatchupTeams.RemoveRange(nextMatchup.MatchupTeams); // Remove previous matchup teams before rebuilding
 
-                MatchupTeam matchupTeam = new MatchupTeam
-                { 
-                    Matchup = nextMatchup!,
-                    Team = winningTeam,
-                    Score = 0
-                };
+                foreach(Matchup dependentMatchup in nextMatchup.InverseNextMatchup)
+                {
+                    MatchupTeam winningMatchupTeam = dependentMatchup.MatchupTeams
+                        .OrderByDescending(mt => mt.Score).First();
+                    Team winningTeam = winningMatchupTeam.Team;
 
-                await _context.MatchupTeams.AddAsync(matchupTeam);
+                    // If score is 0 assume match is unfinished, and then dont create it
+                    if (winningMatchupTeam.Score == 0)
+                    {
+                        continue;
+                    }
+
+                    MatchupTeam matchupTeam = new MatchupTeam
+                    {
+                        Matchup = nextMatchup!,
+                        Team = winningTeam,
+                        Score = 0
+                    };
+
+                    await _context.MatchupTeams.AddAsync(matchupTeam);
+                }
             }
 
             await _context.SaveChangesAsync();
