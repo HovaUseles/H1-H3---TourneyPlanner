@@ -89,7 +89,7 @@ namespace TourneyPlanner.API.Controllers
         }
 
         [HttpPut("[action]/{matchupId}")]
-        public async Task<ActionResult> ChangeScore(int matchupId, IEnumerable<MatchupChangeScoreDto> scoreChanges)
+        public async Task<ActionResult<MatchupDto>> ChangeScore(int matchupId, IEnumerable<MatchupChangeScoreDto> scoreChanges)
         {
             if(!scoreChanges.Any()) 
             {
@@ -117,7 +117,9 @@ namespace TourneyPlanner.API.Controllers
             };
             await _notificationService.SendNotificationAsync(message);
 
-            return Ok();
+            MatchupDto? updatedMatchup = await _matchupRepository.GetById(matchupId);
+
+            return Ok(updatedMatchup);
         }
     }
 }
