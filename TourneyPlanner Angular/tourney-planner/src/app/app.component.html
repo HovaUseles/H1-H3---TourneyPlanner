@@ -1,11 +1,11 @@
 <mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav" mode="side">
-    <h3 style="text-align: center; font-weight: bolder;">TourneyPlanner</h3>
-    <button routerLink="/" mat-raised-button style="display: block;"><mat-icon>public</mat-icon>Tournaments</button>
+  <mat-drawer #drawer class="example-sidenav" mode="side" [opened]="true">
+    <h2 style="text-align: center; font-weight: bolder; margin-bottom: 32px;  margin-top: 2px;">TourneyPlanner</h2>
+    <button routerLink="/" mat-raised-button style="display: block; min-width: 150px; max-width: 150px; margin: auto; text-align: start; margin-bottom: 20px;" color="primary"><mat-icon>public</mat-icon>Tournaments</button>
     <button *ngIf="isLoggedIn$ | async" routerLink="/User/Tournaments" mat-raised-button
-      style="display: block;"><mat-icon>person_pin</mat-icon>My tournaments</button>
+      style="display: block; min-width: 150px; max-width: 150px; margin: auto; text-align: start; margin-bottom: 20px;" color="primary"><mat-icon>person_pin</mat-icon>My tournaments</button>
     <button *ngIf="isLoggedIn$ | async" routerLink="/Settings" mat-raised-button
-      style="display: block;"><mat-icon>settings</mat-icon>Settings</button>
+      style="display: block; min-width: 150px; max-width: 150px; margin: auto; text-align: start;" color="primary"><mat-icon>settings</mat-icon>Settings</button>
   </mat-drawer>
 
   <div class="example-sidenav-content" style="display: flex; justify-content: space-between;">
@@ -13,18 +13,19 @@
       <mat-icon>reorder</mat-icon>
     </button>
 
-    <button *ngIf="isLoggedIn$ | async" matTooltip="Press to logout" mat-button (click)="Logout()"
-      style="max-height: 35px; margin-top: 2px; margin-right: 5px;" color="warn">
-      <mat-icon>exit_to_app</mat-icon>
+    <button *ngIf="isLoggedIn$ | async" matTooltip="Press to logout" mat-raised-button (click)="Logout()"
+      style="max-height: 35px; margin-top: 4px; margin-right: 5px;" color="warn">
+      <mat-icon>logout</mat-icon>Logout
     </button>
 
     <button *ngIf="test" routerLink="/Login" matTooltip="Press to login" mat-raised-button
-      style="max-height: 35px; margin-top: 2px; margin-right: 18px;" color="primary">
+      style="max-height: 35px; margin-top: 4px; margin-right: 18px;" color="primary">
+      <mat-icon>login</mat-icon>
       Login
     </button>
   </div>
+
   <router-outlet>
   </router-outlet>
-
 
 </mat-drawer-container>

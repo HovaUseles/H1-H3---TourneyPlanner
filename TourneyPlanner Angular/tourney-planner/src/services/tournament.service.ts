@@ -50,12 +50,11 @@ export class TournamentService {
     };
     let id = this.getUserId.getUserId();
     this.httpClient.get<Tournament[]>(this.url + '/GetMyTournaments/' + id, httpOptions).subscribe(x => {
-      console.log(x);
       this.myTournamentSubject$.next(x);
     });
   };
 
-  getTournamentDetails(id: string) {
+  getTournamentDetails(id: number) {
     const headers = this.setHttpHeader.setAuthHeader();
     const httpOptions = {
       headers: headers
@@ -66,8 +65,12 @@ export class TournamentService {
   };
 
   createTournament(tournament: CreateTournament) {
-    this.httpClient.post<Tournament[]>(this.url, tournament, { headers: this.setHttpHeader.setAuthHeader() },).subscribe(x => {
-      this.tournamentSubject$.next(x);
+    const headers = this.setHttpHeader.setAuthHeader();
+    const httpOptions = {
+      headers: headers
+    };
+    this.httpClient.post<Tournament>(this.url, tournament, httpOptions).subscribe(x => {
+      this.tournamentDetailsSubject$.next(x);
     });
   };
 

@@ -5,6 +5,8 @@ import { Tournament } from 'src/app/interfaces/tournament';
 import { TournamentService } from 'src/services/tournament.service';
 import { TournamentUpdateComponent } from 'src/app/components/tournament-update/tournament-update.component';
 import { TournamentCreateComponent } from 'src/app/components/tournament-create/tournament-create.component';
+import { Router } from '@angular/router';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-user-tournament',
@@ -14,9 +16,9 @@ import { TournamentCreateComponent } from 'src/app/components/tournament-create/
 export class UserTournamentComponent {
   loggedIn = false;
   tournaments: MatTableDataSource<Tournament> = new MatTableDataSource();
-  displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type", "Edit", "Delete"];
+  displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type"];
 
-  constructor(private tournamentService: TournamentService, private matDialog: MatDialog) {
+  constructor(private tournamentService: TournamentService, private matDialog: MatDialog, private router: Router, private userService: UserService) {
     this.tournamentService.getMyTournaments();
 
     this.tournamentService.myTournaments$.subscribe(x => {
@@ -25,14 +27,20 @@ export class UserTournamentComponent {
     });
   };
 
-  CreateTournament() {
+  tournamentDetails(tournament: Tournament) {
+    this.tournamentService.getTournamentDetails(tournament.id);
+    this.userService.setTournamentUserId(tournament.id);
+    this.router.navigateByUrl('/Tournament');
+  };
+
+  createTournament() {
     this.matDialog.open(TournamentCreateComponent, {
       width: '50%',
       disableClose: true
     });
   };
 
-  EditTournament(tournament: Tournament) {
+  editTournament(tournament: Tournament) {
     this.matDialog.open(TournamentUpdateComponent, {
       width: '50%',
       disableClose: true,
@@ -40,7 +48,7 @@ export class UserTournamentComponent {
     });
   };
 
-  DeleteTournament(tournament: Tournament) {
+  deleteTournament(tournament: Tournament) {
     this.tournamentService.deleteTournament(tournament.id);
   };
 }

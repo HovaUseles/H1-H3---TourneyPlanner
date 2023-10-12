@@ -3,6 +3,7 @@ import { Tournament } from 'src/app/interfaces/tournament';
 import { TournamentService } from 'src/services/tournament.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-tournament',
@@ -11,9 +12,9 @@ import { Router } from '@angular/router';
 })
 export class TournamentComponent {
   tournaments: MatTableDataSource<Tournament> = new MatTableDataSource();
-  displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type", "Favorite"];
+  displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type"];
 
-  constructor(private tournamentService: TournamentService, private router: Router) {
+  constructor(private tournamentService: TournamentService, private router: Router, private userService: UserService) {
     this.tournamentService.getTournaments();
 
     this.tournamentService.tournaments$.subscribe(x => {
@@ -23,7 +24,8 @@ export class TournamentComponent {
   };
 
   tournamentDetails(tournament: Tournament) {
-    this.tournamentService.getTournamentDetails(tournament.id.toString());
+    this.tournamentService.getTournamentDetails(tournament.id);
+    this.userService.setTournamentUserId(tournament.id);
     this.router.navigateByUrl('/Tournament', {state: {data: tournament.id}});
   };
 };

@@ -23,7 +23,7 @@
 
     </div>
 
-    <button mat-raised-button color="primary" (click)="updateMatch()">Update score</button>
+    <button mat-raised-button color="primary" *ngIf="(userId$ | async) == userId" (click)="updateMatch()">Update score</button>
 
     <div style="display:grid; align-items: center;">
 

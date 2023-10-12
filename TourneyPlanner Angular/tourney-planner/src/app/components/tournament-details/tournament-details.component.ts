@@ -25,6 +25,7 @@ export class TournamentDetailsComponent {
 
   constructor(private tournamentService: TournamentService, private bracketService: BracketService, private router: Router, private matchupService: MatchupService, private teamService: TeamService) {
     this.tournamentService.tournamentDetails$.subscribe(x => {
+      this.dataSource.data = [];
       this.tournamentName = x.name;
       x.matchups.forEach(element => {
         if (element.teams.length > 0) {
@@ -39,6 +40,7 @@ export class TournamentDetailsComponent {
       });
       this.teamService.setAttendingTeamList(this.teams);
       this.dataSource.data = this.matchups;
+      this.dataSource._updateChangeSubscription();
     });
   };
 

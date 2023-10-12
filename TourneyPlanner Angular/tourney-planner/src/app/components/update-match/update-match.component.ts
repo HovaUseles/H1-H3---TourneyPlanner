@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Matchup } from 'src/app/interfaces/matchup';
 import { MatchupChangeScore } from 'src/app/interfaces/matchup-change-score';
 import { MatchupService } from 'src/services/matchup.service';
@@ -21,7 +21,7 @@ export class UpdateMatchComponent implements OnInit {
     nextMatchupId: 0
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: Matchup, private matchupService: MatchupService) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: Matchup, private matchupService: MatchupService, private matDialogRef: MatDialogRef<UpdateMatchComponent>) {
     this.match = this.data;
   }
 
@@ -39,5 +39,7 @@ export class UpdateMatchComponent implements OnInit {
     }];
 
     this.matchupService.updateMatch(this.match.id, list);
+
+    this.matDialogRef.close();
   }
 }

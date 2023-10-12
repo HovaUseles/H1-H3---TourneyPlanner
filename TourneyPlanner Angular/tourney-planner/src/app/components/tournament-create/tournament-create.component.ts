@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CreateTournament } from 'src/app/interfaces/create-tournament';
-import { Matchup } from 'src/app/interfaces/matchup';
+import { Player } from 'src/app/interfaces/player';
 import { Team } from 'src/app/interfaces/team';
-import { Tournament } from 'src/app/interfaces/tournament';
 import { TournamentService } from 'src/services/tournament.service';
 
 @Component({
@@ -12,105 +11,137 @@ import { TournamentService } from 'src/services/tournament.service';
   templateUrl: './tournament-create.component.html',
   styleUrls: ['./tournament-create.component.css']
 })
-export class TournamentCreateComponent implements OnInit {
-  tournamentDetailsFormGroup: FormGroup = this.formBuilder.group({
-    name: ['', Validators.required],
-    gameType: ['', Validators.required],
-    tournamentType: ['', Validators.required],
-    startDate: [null, Validators.required],
-    randomize: [true, [Validators.required]]
+export class TournamentCreateComponent {
+  tournamentDetailsFormGroup = this.formBuilder.group({
+    name: new FormControl('', [Validators.required]),
+    gameType: new FormControl('', [Validators.required]),
+    tournamentType: new FormControl('', [Validators.required]),
+    startDate: new FormControl(null, [Validators.required]),
+    randomize: new FormControl(true, [Validators.required])
   });
 
-  teamData = [{ name: '', players: [{ firstName: '', lastName: ''}] }];
-  playerData = [{ firstName: '', lastName: '' }];
-  teamsFormGroup: FormGroup = this.formBuilder.group({
-    teams: this.formBuilder.array(this.teamData.map(
-      teams => this.formBuilder.group(teams)
-    )),
-    child: this.formBuilder.group({
-      players: this.formBuilder.array(this.playerData.map(
-        players => this.formBuilder.group(players)
-      ))
-    })
-  });
-
-  // playersFormGroup: FormGroup = this.formBuilder.group({
-  //   players: this.formBuilder.array(this.playerData.map(
-  //     players => this.formBuilder.group(players)
-  //   ))
+  playerData: FormGroup = this.formBuilder.group({ firstName: new FormControl(null, [Validators.required]), lastName: new FormControl('') });
+  teamData: FormGroup = this.formBuilder.group({ name: new FormControl(null, [Validators.required]), players: this.formBuilder.array([this.playerData]) });
+  // teamsFormGroup = this.formBuilder.group({
+  //   teams: this.formBuilder.array([this.teamData])
+  //   // this.formBuilder.array(this.teamData.map(
+  //   //   teams => this.formBuilder.group(teams)
+  //   // ))
   // });
 
-  constructor(private formBuilder: FormBuilder, private tournamentService: TournamentService, private matDialogRef: MatDialogRef<TournamentCreateComponent>) {}
+  teamsFormGroup = this.formBuilder.group({
+    name1: new FormControl(null, [Validators.required]),
+    firstName1: new FormControl(null, [Validators.required]),
+    lastName1: new FormControl(null, [Validators.required]),
+    name2: new FormControl(null, [Validators.required]),
+    firstName2: new FormControl(null, [Validators.required]),
+    lastName2: new FormControl(null, [Validators.required]),
+    name3: new FormControl(null, [Validators.required]),
+    firstName3: new FormControl(null, [Validators.required]),
+    lastName3: new FormControl(null, [Validators.required]),
+    name4: new FormControl(null, [Validators.required]),
+    firstName4: new FormControl(null, [Validators.required]),
+    lastName4: new FormControl(null, [Validators.required]),
+  })
 
-  ngOnInit() {
+  constructor(private formBuilder: FormBuilder, private tournamentService: TournamentService, private matDialogRef: MatDialogRef<TournamentCreateComponent>) { }
+
+  getPlayers(index: number): FormArray {
+    (<FormArray>(this.teamsFormGroup.get("teams." + index.toString() + '.players'))).push(this.formBuilder.control({ firstName: new FormControl("ss", [Validators.required]), lastName: new FormControl('') }));
+
+    return (<FormArray>this.teamsFormGroup.get("teams." + index.toString() + '.players'));
   }
 
-  get players(): FormArray {
-    return this.teamsFormGroup.get('child.players') as FormArray;
+  addPlayerField(index: number) {
+    (<FormArray>(<FormGroup>this.teamsFormGroup.get("teams." + index.toString())).get('players')).push(this.formBuilder.group({ firstName: new FormControl('mikkel', [Validators.required]), lastName: new FormControl('') }));
   }
 
-  buildPlayers(players: {firstName: string; lastName: string;}[] = []) {
-    return this.formBuilder.array(players.map(player => this.formBuilder.group(player)));
+  removePlayerField(parentIndex: number, childIndex: number): void {
+    if (this.getPlayers(parentIndex).length > 1) {
+      this.getPlayers(parentIndex).removeAt(childIndex);
+    }
+    else {
+      this.getPlayers(parentIndex).patchValue([this.playerData]);
+    }
   }
 
-  addPlayerField() {
-    this.players.push(this.formBuilder.group({firstName: null, lastName: null}))
+  resetPlayers(index: number): void {
+    this.getPlayers(index).reset();
+    this.getPlayers(index).clear();
+    this.addPlayerField(index);
   }
 
-  removePlayerField(index: number): void {
-    if (this.players.length > 1) this.players.removeAt(index);
-    else this.players.patchValue([{firstName: null, lastName: null}]);
-  }
-
-  resetPlayers(): void {
-    // this.playersFormGroup.reset();
-    this.players.clear();
-    this.addPlayerField();
-  }
-
-  get teams(): FormArray {
+  getTeams(): FormArray {
+    console.log(this.teamsFormGroup.get('teams'))
     return this.teamsFormGroup.get('teams') as FormArray;
   }
 
-  buildTeams(teams: {name: string;}[] = []) {
-    return this.formBuilder.array(teams.map(team => this.formBuilder.group(team)));
-  }
-
   addTeamField() {
-    this.teams.push(this.formBuilder.group({name: null}))
+    (<FormArray>(this.teamsFormGroup.get("teams"))).push(this.formBuilder.group({ name: new FormControl(null, [Validators.required]), players: this.formBuilder.array([this.formBuilder.group({ firstName: new FormControl(null, [Validators.required]), lastName: new FormControl('') })]) }));
   }
 
   removeTeamField(index: number): void {
-    if (this.teams.length > 1) this.teams.removeAt(index);
-    else this.teams.patchValue([{name: null}]);
+    if (this.getTeams().length > 1) this.getTeams().removeAt(index);
+    else this.getTeams().patchValue([this.teamData]);
   }
 
   resetTeams(): void {
     this.teamsFormGroup.reset();
-    this.teams.clear();
+    this.getTeams().clear();
     this.addTeamField();
   }
 
   createTournament() {
-    for (let index = 0; index < this.teams.length; index++) {
+    let players: Player[] = [
+      {
+        id: 0,
+        firstName: this.teamsFormGroup.get("firstName1")?.value,
+        lastName: this.teamsFormGroup.get("lastName1")?.value
+      },
+      {
+        id: 0,
+        firstName: this.teamsFormGroup.get("firstName2")?.value,
+        lastName: this.teamsFormGroup.get("lastName2")?.value
+      },
+      {
+        id: 0,
+        firstName: this.teamsFormGroup.get("firstName3")?.value,
+        lastName: this.teamsFormGroup.get("lastName3")?.value
+      },
+      {
+        id: 0,
+        firstName: this.teamsFormGroup.get("firstName4")?.value,
+        lastName: this.teamsFormGroup.get("lastName4")?.value
+      }];
+    let teams: Team[] = [{id: 0, teamName: this.teamsFormGroup.get("name1")?.value, players: [players[0]]},
+    {id: 0, teamName: this.teamsFormGroup.get("name2")?.value, players: [players[0]]},
+    {id: 0, teamName: this.teamsFormGroup.get("name3")?.value, players: [players[0]]},
+    {id: 0, teamName: this.teamsFormGroup.get("name4")?.value, players: [players[0]]}];
+    // for (let index = 0; index < (<FormArray>(this.teamsFormGroup.get("teams"))).length; index++) {
+    //   for (let idx = 0; idx < this.getPlayers(index).length; idx++) {
+    //     let player: Player = {
+    //       id: 0,
+    //       firstName: this.teamsFormGroup.get("teams." + index + ".players" + idx + "firstName")?.value,
+    //       lastName: this.teamsFormGroup.get("teams." + index + ".players" + idx + "firstName")?.value,
+    //     }
+    //     players.push(player)
+    //   }
+    //   teams.push({ id: 0, teamName: this.teamsFormGroup.get("teams." + index + ".name")?.value, players: players });
+    // }
 
+    let tournament: CreateTournament = {
+      name: this.tournamentDetailsFormGroup.get("name")?.value,
+      gameTypeId: 1,
+      tournamentTypeId: 1,
+      randomnizeTeams: this.tournamentDetailsFormGroup.get("randomize")?.value,
+      startDate: this.tournamentDetailsFormGroup.get("startDate")?.value,
+      teams: teams
     }
 
-    // let teams: Team[] = {
+    console.log(tournament)
 
-    // }
-
-    // let tournament: CreateTournament = {
-    //   name: this.tournamentDetailsFormGroup.value.name,
-    //   gameTypeId: 1,
-    //   tournamentTypeId: 1,
-    //   randomnizeTeams: true,
-    //   startDate: new Date(),
-    //   teams: teams
-    // }
-
-    // this.tournamentService.createTournament(tournament);
-    this.matDialogRef.close(true);
+    this.tournamentService.createTournament(tournament);
+    // this.matDialogRef.close(true);
   }
 
   closeDialog() {

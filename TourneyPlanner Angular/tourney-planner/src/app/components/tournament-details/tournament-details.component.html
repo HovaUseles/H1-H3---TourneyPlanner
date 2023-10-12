@@ -6,9 +6,7 @@
 
   <mat-card style="align-items: center; min-width: 97%; height: fit-content; padding: 15px; margin: 10px; background-color: lightcyan;">
 
-    <h2 style="text-align: center; font-weight: 800; font-size: 350%;">{{tournamentName}}</h2>
-
-    <h2 style="text-align: center; font-weight: 800; font-size: 250%;">Matches</h2>
+    <h2 style="text-align: center; font-weight: 800; font-size: 350%; margin-bottom: 20px;">{{tournamentName}} matches</h2>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%;">
 
@@ -33,7 +31,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToMatchPage(row)"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="goToMatchPage(row)" class="tableRow"></tr>
     </table>
 
   </mat-card>
