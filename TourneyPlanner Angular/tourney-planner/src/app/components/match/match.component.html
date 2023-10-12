@@ -15,9 +15,15 @@
 
   <div style="display:grid; align-items: center; justify-content: space-between; min-width: 6%; max-width: 6%;">
 
-    <div style="font-size: 250%; font-weight: 800; text-align: center;">Score</div>
+    <div style="display: grid; align-items: center;">
 
-    <p style="font-size: 350%; font-weight: 800; margin-top: 20px;">{{(match$ | async)!.teams[0].score}} - {{(match$ | async)!.teams[1].score}}</p>
+      <div style="font-size: 250%; font-weight: 800; text-align: center; margin-top: 10px; margin-bottom: 20px;">Score</div>
+
+      <p style="font-size: 350%; font-weight: 800; margin-top: 20px; text-align: center;">{{(match$ | async)!.teams[0].score}} - {{(match$ | async)!.teams[1].score}}</p>
+
+    </div>
+
+    <button mat-raised-button color="primary" (click)="updateMatch()">Update score</button>
 
     <div style="display:grid; align-items: center;">
 

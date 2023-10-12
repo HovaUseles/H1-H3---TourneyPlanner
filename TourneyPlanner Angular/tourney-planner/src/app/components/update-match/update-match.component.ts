@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Matchup } from 'src/app/interfaces/matchup';
+import { MatchupChangeScore } from 'src/app/interfaces/matchup-change-score';
 import { MatchupService } from 'src/services/matchup.service';
 
 @Component({
@@ -28,9 +29,15 @@ export class UpdateMatchComponent implements OnInit {
   }
 
   submit() {
-    this.match.teams[0].score = this.homeTeamScore.value;
-    this.match.teams[1].score = this.awayTeamScore.value;
+    let list: MatchupChangeScore[] = [{
+      teamId: this.match.teams[0].id,
+      score: this.homeTeamScore.value
+    },
+    {
+      teamId: this.match.teams[1].id,
+      score: this.awayTeamScore.value
+    }];
 
-    // this.matchupService.
+    this.matchupService.updateMatch(this.match.id, list);
   }
 }
