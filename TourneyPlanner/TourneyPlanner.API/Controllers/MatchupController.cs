@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TourneyPlanner.API.DTOs;
 using TourneyPlanner.API.Repositories;
 
@@ -23,9 +24,15 @@ namespace TourneyPlanner.API.Controllers
 
         [HttpPost("[action]")]
         [Authorize]
-        public async Task<ActionResult> FollowMatchup(int matchupId)
+        public async Task<ActionResult> FollowMatchup([FromBody]int matchupId)
         {
-            int userId = 1; // TODO: Get From JWT Token
+            ClaimsIdentity? identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null)
+            {
+                return NotFound("Token not found");
+            }
+
+            int userId = Convert.ToInt32(identity.FindFirst("UserId")!.Value);
             UserDto? user = await _userRepository.GetById(userId);
 
             if (user == null)
@@ -33,7 +40,7 @@ namespace TourneyPlanner.API.Controllers
                 return NotFound("User not found");
             }
 
-            MatchupDto? matchupDto =  await _matchupRepository.GetById(matchupId);
+            MatchupDto? matchupDto = await _matchupRepository.GetById(matchupId);
 
             if (matchupDto == null)
             {
@@ -41,6 +48,36 @@ namespace TourneyPlanner.API.Controllers
             }
 
             await _matchupRepository.FollowMatchup((MatchupDto)matchupDto, (UserDto)user);
+
+            return Ok();
+        }
+
+        [HttpPost("[action]")]
+        [Authorize]
+        public async Task<ActionResult> UnfollowMatchup([FromBody]int matchupId)
+        {
+            ClaimsIdentity? identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null)
+            {
+                return NotFound("Token not found");
+            }
+
+            int userId = Convert.ToInt32(identity.FindFirst("UserId")!.Value);
+            UserDto? user = await _userRepository.GetById(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            MatchupDto? matchupDto = await _matchupRepository.GetById(matchupId);
+
+            if (matchupDto == null)
+            {
+                return NotFound("Matchups not found");
+            }
+
+            await _matchupRepository.UnfollowMatchup((MatchupDto)matchupDto, (UserDto)user);
 
             return Ok();
         }

@@ -1,3 +1,4 @@
 export interface Claim {
-  role: string;
+  UserId: number;
+  Email: string;
 }

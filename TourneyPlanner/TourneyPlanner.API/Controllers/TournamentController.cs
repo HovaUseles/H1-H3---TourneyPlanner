@@ -43,6 +43,19 @@ namespace TourneyPlanner.API.Controllers
             return Ok(tournament);
         }
 
+        // GET api/<TournamentController>GetMyTournaments//5
+        [HttpGet("[action]/{id}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetMyTournaments(int id)
+        {
+            IEnumerable<TournamentDto>? tournaments = await _tournamentRepository.GetMyTournaments(id);
+            if (tournaments == null)
+            {
+                return NotFound($"Tournaments with userId: {id} does not exist.");
+            }
+            return Ok(tournaments);
+        }
+
         // POST api/<TournamentController>
         [HttpPost]
         [Authorize]

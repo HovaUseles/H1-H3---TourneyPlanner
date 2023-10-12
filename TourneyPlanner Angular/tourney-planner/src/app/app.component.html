@@ -2,7 +2,7 @@
   <mat-drawer #drawer class="example-sidenav" mode="side">
     <h3 style="text-align: center; font-weight: bolder;">TourneyPlanner</h3>
     <button routerLink="/" mat-raised-button style="display: block;"><mat-icon>public</mat-icon>Tournaments</button>
-    <button *ngIf="isLoggedIn$ | async" routerLink="/User/Tournament" mat-raised-button
+    <button *ngIf="isLoggedIn$ | async" routerLink="/User/Tournaments" mat-raised-button
       style="display: block;"><mat-icon>person_pin</mat-icon>My tournaments</button>
     <button *ngIf="isLoggedIn$ | async" routerLink="/Settings" mat-raised-button
       style="display: block;"><mat-icon>settings</mat-icon>Settings</button>

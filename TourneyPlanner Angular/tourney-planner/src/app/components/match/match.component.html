@@ -9,8 +9,7 @@
       src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/football-team-logo-design-template-7547dc142841497477abd20a4bc3889a_screen.jpg?ts=1658999239"
       style="display:block; margin: auto; max-width: 33%; height: auto; border-radius: 50%;">
 
-      <p style="font-size: 250%; font-weight: 800; text-align: center; margin-top: 20px;">{{(match$ |
-        async)!.teams[0].teamName}}</p>
+      <p style="font-size: 250%; font-weight: 800; text-align: center; margin-top: 20px;">{{(match$ | async)!.teams[0].teamName}}</p>
 
   </mat-card>
 
@@ -18,14 +17,13 @@
 
     <div style="font-size: 250%; font-weight: 800; text-align: center;">Score</div>
 
-    <p style="font-size: 350%; font-weight: 800; margin-top: 20px;">{{(match$ | async)!.teams[0].score}} - {{(match$ |
-      async)!.teams[1].score}}</p>
+    <p style="font-size: 350%; font-weight: 800; margin-top: 20px;">{{(match$ | async)!.teams[0].score}} - {{(match$ | async)!.teams[1].score}}</p>
 
     <div style="display:grid; align-items: center;">
 
       <div style="font-size: 150%; margin-bottom: 10px;">Notifications</div>
 
-      <mat-slide-toggle style="display: block; margin: auto;"></mat-slide-toggle>
+      <mat-slide-toggle style="display: block; margin: auto;" (change)="matchNotifications()"></mat-slide-toggle>
 
     </div>
 
@@ -39,8 +37,7 @@
     <img src="https://as1.ftcdn.net/v2/jpg/03/28/01/86/1000_F_328018671_SGpU11Z7T5cEQiJA177puZOaY3T9v5nD.jpg"
       style="display:block; margin: auto; max-width: 33%; height: auto; border-radius: 50%;">
 
-      <p style="font-size: 250%; font-weight: 800; text-align: center; margin-top: 20px;">{{(match$ |
-        async)!.teams[1].teamName}}</p>
+      <p style="font-size: 250%; font-weight: 800; text-align: center; margin-top: 20px;">{{(match$ | async)!.teams[1].teamName}}</p>
 
   </mat-card>
 

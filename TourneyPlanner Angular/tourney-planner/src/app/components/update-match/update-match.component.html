@@ -1,0 +1,21 @@
+<div style="display: grid; grid-row-gap: 25px; justify-content: center; min-width: 97%; height: fit-content; padding: 15px;">
+
+  <h3>Update match</h3>
+
+  <div style="display: flex; justify-content: space-evenly;">
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{match.teams[0].teamName}} score</mat-label>
+      <input matInput type="number" [formControl]="homeTeamScore">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{match.teams[1].teamName}} score</mat-label>
+      <input matInput type="number" [formControl]="awayTeamScore">
+    </mat-form-field>
+
+  </div>
+
+  <button [disabled]="!homeTeamScore.valid || !awayTeamScore.valid" mat-raised-button (click)="submit()">Submit</button>
+
+</div>

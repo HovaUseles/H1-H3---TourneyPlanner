@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CreateTournament } from 'src/app/interfaces/create-tournament';
 import { Tournament } from 'src/app/interfaces/tournament';
+import { GetUserId } from 'src/app/utility/get-user-id';
 import { SetHttpHeader } from 'src/app/utility/set-http-header';
 import { environment } from 'src/environments/environment';
 
@@ -15,6 +16,10 @@ export class TournamentService {
   private tournamentSubject$: Subject<Tournament[]> = new BehaviorSubject<Tournament[]>(this.tournaments);
   tournaments$: Observable<Tournament[]> = this.tournamentSubject$.asObservable();
 
+  private myTournaments: Array<Tournament> = [];
+  private myTournamentSubject$: Subject<Tournament[]> = new BehaviorSubject<Tournament[]>(this.myTournaments);
+  myTournaments$: Observable<Tournament[]> = this.myTournamentSubject$.asObservable();
+
   tournamentDetails = (): Tournament => ({
     id: 0,
     name: '',
@@ -26,7 +31,7 @@ export class TournamentService {
   private tournamentDetailsSubject$: Subject<Tournament> = new BehaviorSubject<Tournament>(this.tournamentDetails());
   tournamentDetails$: Observable<Tournament> = this.tournamentDetailsSubject$.asObservable();
 
-  constructor(public httpClient: HttpClient, private setHttpHeader: SetHttpHeader) { }
+  constructor(public httpClient: HttpClient, private setHttpHeader: SetHttpHeader, private getUserId: GetUserId) { }
 
   getTournaments() {
     const headers = this.setHttpHeader.setAuthHeader();
@@ -38,13 +43,24 @@ export class TournamentService {
     });
   };
 
+  getMyTournaments() {
+    const headers = this.setHttpHeader.setAuthHeader();
+    const httpOptions = {
+      headers: headers
+    };
+    let id = this.getUserId.getUserId();
+    this.httpClient.get<Tournament[]>(this.url + '/GetMyTournaments/' + id, httpOptions).subscribe(x => {
+      console.log(x);
+      this.myTournamentSubject$.next(x);
+    });
+  };
+
   getTournamentDetails(id: string) {
     const headers = this.setHttpHeader.setAuthHeader();
     const httpOptions = {
       headers: headers
     };
     this.httpClient.get<Tournament>(this.url + '/' + id, httpOptions).subscribe(x => {
-      console.log(x)
       this.tournamentDetailsSubject$.next(x);
     });
   };
@@ -65,12 +81,12 @@ export class TournamentService {
     });
   };
 
-  deleteTournament(tournament: Tournament) {
+  deleteTournament(id: number) {
     const headers = this.setHttpHeader.setAuthHeader();
     const httpOptions = {
       headers: headers
     };
-    this.httpClient.delete<Tournament[]>(this.url + '/' + tournament.id, httpOptions).subscribe(x => {
+    this.httpClient.delete<Tournament[]>(this.url + '/' + id, httpOptions).subscribe(x => {
       this.tournamentSubject$.next(x);
     });
   };

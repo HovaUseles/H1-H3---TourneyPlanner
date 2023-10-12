@@ -30,8 +30,6 @@ export class AuthenticationService {
   }
 
   register(login: Auth) {
-    console.log(login);
-
     this.httpClient.post<Token>(this.url + this.registerEndpoint, login).subscribe(x => {
       this.checkResponse(x);
     });

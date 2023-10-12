@@ -17,9 +17,9 @@ export class UserTournamentComponent {
   displayedColumns: Array<string> = ["Name", "Start date", "Game type", "Tournament type", "Edit", "Delete"];
 
   constructor(private tournamentService: TournamentService, private matDialog: MatDialog) {
-    this.tournamentService.getTournaments();
+    this.tournamentService.getMyTournaments();
 
-    this.tournamentService.tournaments$.subscribe(x => {
+    this.tournamentService.myTournaments$.subscribe(x => {
       this.tournaments.data = x;
       this.tournaments._updateChangeSubscription();
     });
@@ -28,8 +28,7 @@ export class UserTournamentComponent {
   CreateTournament() {
     this.matDialog.open(TournamentCreateComponent, {
       width: '50%',
-      disableClose: true,
-      data: null
+      disableClose: true
     });
   };
 
@@ -42,6 +41,6 @@ export class UserTournamentComponent {
   };
 
   DeleteTournament(tournament: Tournament) {
-    this.tournamentService.deleteTournament(tournament);
+    this.tournamentService.deleteTournament(tournament.id);
   };
 }

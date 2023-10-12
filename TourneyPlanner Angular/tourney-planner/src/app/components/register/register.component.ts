@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from 'src/services/authentication.service';
 import { Auth } from 'src/app/interfaces/auth'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,12 +17,13 @@ export class RegisterComponent {
   password = new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern(this.regex)]);
   confirmPassword = new FormControl("", [Validators.required, Validators.minLength(8), Validators.pattern(this.regex)]);
 
-  constructor(private matDialogRef: MatDialogRef<RegisterComponent>, private authService: AuthenticationService) { }
+  constructor(private matDialogRef: MatDialogRef<RegisterComponent>, private authService: AuthenticationService, private router: Router) { }
 
   submitRegistration() {
     let login: Auth = {email: this.email.value!, password: this.password.value!};
     this.authService.register(login);
-    this.closeDialog();
+    this.router.navigateByUrl("/User/Tournaments");
+    this.matDialogRef.close();
   }
 
   getEmailErrorMessage() {

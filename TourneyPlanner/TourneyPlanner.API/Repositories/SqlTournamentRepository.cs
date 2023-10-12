@@ -18,7 +18,7 @@ namespace TourneyPlanner.API.Repositories
         {
             TournamentType? tournamentType = _context.TournamentTypes.Find(dto.TournamentTypeId);
 
-            if(tournamentType == null)
+            if (tournamentType == null)
             {
                 throw new ArgumentException($"Invalid tournament type with Id: {dto.TournamentTypeId}.", nameof(dto.TournamentTypeId));
             }
@@ -37,19 +37,19 @@ namespace TourneyPlanner.API.Repositories
             // Preparing values for tournament construction
             IEnumerable<Matchup> matchups = factory.BuildMatchups(dto);
             GameType? gameType = _context.GameTypes.Find(dto.GameTypeId);
-            if(gameType == null)
+            if (gameType == null)
             {
                 throw new ArgumentException($"No GameType exists with Id: {dto.GameTypeId}", nameof(dto.GameTypeId));
             }
 
             User? user = await _context.Users.FindAsync(userDto.Id);
-            if(user == null)
+            if (user == null)
             {
                 throw new ArgumentException($"No User exists with Id: {userDto.Id}", nameof(userDto.Id));
             }
 
-            Tournament tournament = new Tournament 
-            { 
+            Tournament tournament = new Tournament
+            {
                 Name = dto.Name,
                 StartDate = dto.StartDate,
                 GameType = gameType,
@@ -165,6 +165,32 @@ namespace TourneyPlanner.API.Repositories
             }
 
             return ConvertToDto(tournament);
+        }
+
+        public async Task<IEnumerable<TournamentDto>> GetMyTournaments(int id)
+        {
+            List<Tournament> tournaments = await _context.Tournaments
+                .Include(t => t.User)
+                .Include(t => t.TournamentType)
+                .Include(t => t.GameType)
+                .Include(t => t.Matchups)
+                .ThenInclude(m => m.MatchupTeams)
+                .ThenInclude(mt => mt.Team)
+                .ThenInclude(t => t.Players)
+                .Where(x => x.UserId == id)
+                .ToListAsync();
+
+            IEnumerable<TournamentDto> tournamentDtos = tournaments.ConvertAll<TournamentDto>(t =>
+            {
+                return ConvertToDto(t);
+            });
+
+            if (tournamentDtos == null)
+            {
+                return null;
+            }
+
+            return tournamentDtos;
         }
 
         public async Task Update(int id, CreateTournamentDto dtoChanges)
