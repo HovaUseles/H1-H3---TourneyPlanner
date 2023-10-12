@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Matchup } from 'src/app/interfaces/matchup';
+import { MatchupChangeScore } from 'src/app/interfaces/matchup-change-score';
 import { SetHttpHeader } from 'src/app/utility/set-http-header';
 import { environment } from 'src/environments/environment';
 
@@ -26,13 +27,13 @@ export class MatchupService {
     this.matchDetailsSubject$.next(match);
   };
 
-  updateMatch(match: Matchup) {
+  updateMatch(id: number, list: MatchupChangeScore[]) {
     const headers = this.setHttpHeader.setAuthHeader();
     const httpOptions = {
       headers: headers
     };
 
-    this.httpClient.put<Matchup>(this.url + '/ChangeScore/' + match.id, match, httpOptions).subscribe(x => {
+    this.httpClient.put<Matchup>(this.url + '/ChangeScore/' + id, list, httpOptions).subscribe(x => {
       this.matchDetailsSubject$.next(x);
     });
   };
