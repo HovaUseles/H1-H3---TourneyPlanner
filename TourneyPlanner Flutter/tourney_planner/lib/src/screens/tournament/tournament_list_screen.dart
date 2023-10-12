@@ -82,6 +82,14 @@ class _TournamentListScreenState extends State<TournamentListScreen> {
               );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {
+          tourneyBloc.add(TournamentGetListEvent())
+        },
+        child: const Icon(
+          Icons.refresh
+        ),
+      ),
     );
   }
 }

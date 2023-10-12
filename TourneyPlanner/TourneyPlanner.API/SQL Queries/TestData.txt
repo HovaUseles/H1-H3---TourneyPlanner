@@ -1,10 +1,90 @@
 {
-  "name": "string",
+  "name": "H3 Tourney"
   "tournamentTypeId": 1,
   "gameTypeId": 1,
   "startDate": "2023-10-10T08:26:45.435Z",
   "randomnizeTeams": true,
   "teams": [
+    {
+      "id": 0,
+      "teamName": "Rust Brothers",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Kevsembly",
+          "lastName": "Borust"
+        },
+        {
+          "id": 0,
+          "firstName": "Emil",
+          "lastName": "Rustboss"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "Lars & Ayoub",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Lars",
+          "lastName": "H"
+        },
+        {
+          "id": 0,
+          "firstName": "Ayoub",
+          "lastName": "L"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "All by my self",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Niklas",
+          "lastName": "Middleware Jul"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "Janni & Mathias",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Janni",
+          "lastName": "B"
+        },
+        {
+          "id": 0,
+          "firstName": "Mathias",
+          "lastName": "J"
+        }
+      ]
+    },
+    {
+      "id": 0,
+      "teamName": "Flutter Fanatics",
+      "score": 0,
+      "players": [
+        {
+          "id": 0,
+          "firstName": "Mikkel",
+          "lastName": "Banangular"
+        },
+        {
+          "id": 0,
+          "firstName": "Jacob",
+          "lastName": "POJO"
+        }
+      ]
+    },
     {
       "id": 0,
       "teamName": "Team 1",
@@ -13,12 +93,12 @@
         {
           "id": 0,
           "firstName": "Player",
-          "lastName": " 1"
+          "lastName": "1"
         },
         {
           "id": 0,
           "firstName": "Player",
-          "lastName": " 2"
+          "lastName": "2"
         }
       ]
     },
@@ -30,12 +110,12 @@
         {
           "id": 0,
           "firstName": "Player",
-          "lastName": " 3"
+          "lastName": "1"
         },
         {
           "id": 0,
           "firstName": "Player",
-          "lastName": " 4"
+          "lastName": "2"
         }
       ]
     },
@@ -47,29 +127,12 @@
         {
           "id": 0,
           "firstName": "Player",
-          "lastName": " 5"
+          "lastName": "1"
         },
         {
           "id": 0,
           "firstName": "Player",
-          "lastName": " 6"
-        }
-      ]
-    },
-    {
-      "id": 0,
-      "teamName": "Team 4",
-      "score": 0,
-      "players": [
-        {
-          "id": 0,
-          "firstName": "Player",
-          "lastName": " 7"
-        },
-        {
-          "id": 0,
-          "firstName": "Player",
-          "lastName": " 8"
+          "lastName": "2"
         }
       ]
     }

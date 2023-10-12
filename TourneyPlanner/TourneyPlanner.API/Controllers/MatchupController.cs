@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FirebaseAdmin.Messaging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TourneyPlanner.API.DTOs;
+using TourneyPlanner.API.Models;
 using TourneyPlanner.API.Repositories;
+using TourneyPlanner.API.Services;
 
 namespace TourneyPlanner.API.Controllers
 {
@@ -13,13 +16,16 @@ namespace TourneyPlanner.API.Controllers
     {
         private readonly IMatchupRepository _matchupRepository;
         private readonly IUserRepository _userRepository;
+        private readonly INotificationService _notificationService;
 
         public MatchupController(
             IMatchupRepository matchupRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            INotificationService notificationService)
         {
             _matchupRepository = matchupRepository;
             _userRepository = userRepository;
+            _notificationService = notificationService;
         }
 
         [HttpPost("[action]")]
@@ -78,6 +84,38 @@ namespace TourneyPlanner.API.Controllers
             }
 
             await _matchupRepository.UnfollowMatchup((MatchupDto)matchupDto, (UserDto)user);
+
+            return Ok();
+        }
+
+        [HttpPut("[action]/{matchupId}")]
+        public async Task<ActionResult> ChangeScore(int matchupId, IEnumerable<MatchupChangeScoreDto> scoreChanges)
+        {
+            if(!scoreChanges.Any()) 
+            {
+                return BadRequest("No scores received ");
+            }
+
+            try
+            {
+                await _matchupRepository.UpdateMatchupScore(matchupId, scoreChanges);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            Message message = new Message()
+            {
+                Notification = new Notification()
+                {
+                    Title = "New Match Result",
+                    Body = $"Result for Matchup ID: {matchupId}."
+
+                },
+                Topic = "matchup-update",
+            };
+            await _notificationService.SendNotificationAsync(message);
 
             return Ok();
         }

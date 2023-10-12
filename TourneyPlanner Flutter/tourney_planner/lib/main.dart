@@ -26,7 +26,7 @@ Future<void> main() async {
       }
     });
     
-  FirebaseMessaging.instance.subscribeToTopic("news");
+  FirebaseMessaging.instance.subscribeToTopic("matchup-update");
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   // FirebaseMessaging.onBackgroundMessage((message) => )
   // Set up the SettingsController, which will glue user settings to multiple

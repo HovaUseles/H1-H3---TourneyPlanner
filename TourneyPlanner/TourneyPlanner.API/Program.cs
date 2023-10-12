@@ -77,6 +77,7 @@ builder.Services.AddScoped<ITeamRepository, SqlTeamRepository>();
 builder.Services.AddScoped<IHashingService, HashingService>();
 builder.Services.AddScoped<ISaltService, SaltService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 builder.Services.AddDbContext<TourneyPlannerDevContext>(options =>
 {

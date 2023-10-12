@@ -85,6 +85,61 @@ namespace TourneyPlanner.API.Repositories
                 return null;
             }
 
+            return ConvertToDto(match);
+        }
+
+        public async Task UpdateMatchupScore(int matchupId, IEnumerable<MatchupChangeScoreDto> scoreChanges)
+        {
+            Matchup? match = await _context.Matchups
+                .Include(m => m.NextMatchup)
+                .Include(m => m.MatchupTeams)
+                    .ThenInclude(mt => mt.Team)
+                        .ThenInclude(t => t.Players)
+                .FirstOrDefaultAsync(m => m.Id == matchupId);
+
+            if (match == null)
+            {
+                throw new KeyNotFoundException($"Matchup with id: {matchupId} not found.");
+            }
+
+            foreach (MatchupChangeScoreDto scoreChange in scoreChanges)
+            {
+                MatchupTeam? matchupTeam = match.MatchupTeams.FirstOrDefault(mt => mt.TeamId == scoreChange.TeamId);
+
+                if (matchupTeam == null)
+                {
+                    throw new KeyNotFoundException($"Team with id: {scoreChange.TeamId} not found.");
+                }
+
+                matchupTeam.Score = scoreChange.Score;
+                var entity = _context.MatchupTeams.Attach(matchupTeam);
+                entity.State = EntityState.Modified;
+            }
+
+            // Find winner and add to the next matchup, if it exists
+            if(match.NextMatchupId != null)
+            {
+                Team winningTeam = match.MatchupTeams
+                    .OrderByDescending(mt => mt.Score).First().Team;
+
+                Matchup nextMatchup = await _context.Matchups.FindAsync(match.NextMatchupId);
+
+                MatchupTeam matchupTeam = new MatchupTeam
+                { 
+                    Matchup = nextMatchup!,
+                    Team = winningTeam,
+                    Score = 0
+                };
+
+                await _context.MatchupTeams.AddAsync(matchupTeam);
+            }
+
+            await _context.SaveChangesAsync();
+            return;
+        }
+
+        private MatchupDto ConvertToDto(Matchup match)
+        {
             return new MatchupDto
             {
                 Id = match.Id,
