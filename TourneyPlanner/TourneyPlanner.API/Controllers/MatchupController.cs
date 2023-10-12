@@ -105,13 +105,13 @@ namespace TourneyPlanner.API.Controllers
                 return NotFound(ex.Message);
             }
 
+            // Build notification message and send it to listeners
             Message message = new Message()
             {
                 Notification = new Notification()
                 {
                     Title = "New Match Result",
                     Body = $"Result for Matchup ID: {matchupId}."
-
                 },
                 Topic = "matchup-update",
             };
