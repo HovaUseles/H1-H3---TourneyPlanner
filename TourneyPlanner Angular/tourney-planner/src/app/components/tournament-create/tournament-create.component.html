@@ -9,45 +9,63 @@
   <mat-step [stepControl]="tournamentDetailsFormGroup" [formGroup]="tournamentDetailsFormGroup">
     <ng-template matStepLabel>Tournament details</ng-template>
 
-    <mat-form-field appearance="outline">
-      <input matInput formControlName="name" placeholder="Tournament name">
-    </mat-form-field>
+    <div style="display: grid">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Game type</mat-label>
-      <mat-select formControlName="gameType">
-        <mat-option [value]="1">
-          Football
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+      <div style="display: flex; justify-content: space-between;">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Tournament type</mat-label>
-      <mat-select formControlName="tournamentType">
-        <mat-option [value]="1">
-          Knockout
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <input matInput formControlName="name" placeholder="Tournament name">
+        </mat-form-field>
 
-    <div style="display:grid; align-items: center;">
+        <mat-form-field appearance="outline">
+          <mat-label>Game type</mat-label>
+          <mat-select formControlName="gameType">
+            <mat-option [value]="1">
+              Football
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <div style="font-size: 150%; margin-bottom: 10px;">Randomize</div>
+        <mat-form-field appearance="outline">
+          <mat-label>Tournament type</mat-label>
+          <mat-select formControlName="tournamentType">
+            <mat-option [value]="1">
+              Knockout
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <mat-slide-toggle style="display: block; margin: auto;"></mat-slide-toggle>
+      </div>
+
+      <div style="display: flex; justify-content: space-between;">
+
+        <mat-form-field>
+          <mat-label>Start date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="startDate">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div style="display:grid; align-items: center;">
+
+          <div style="font-size: 150%; margin-bottom: 10px;">Randomize matchups</div>
+
+          <mat-slide-toggle style="display: block; margin: auto;"></mat-slide-toggle>
+
+        </div>
+
+      </div>
+
+      <div style="display: flex; justify-content: end;">
+
+        <button *ngIf="tournamentDetailsFormGroup.valid" mat-button matStepperNext>Next</button>
+
+      </div>
 
     </div>
 
-    <mat-form-field>
-      <mat-label>Release date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="startDate">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
 
-    <button mat-button matStepperNext>Next</button>
   </mat-step>
 
   <mat-step [stepControl]="teamsFormGroup" [formGroup]="teamsFormGroup">
@@ -131,7 +149,15 @@
 
       </div>
 
+      <div style="display: flex; justify-content: end;">
+
+        <button *ngIf="teamsFormGroup.valid" mat-button matStepperPrevious>Back</button>
+
+        <button *ngIf="teamsFormGroup.valid" mat-button matStepperNext>Next</button>
+
       </div>
+
+    </div>
 
 
 
@@ -196,23 +222,32 @@
 
     <button mat-raised-button type="button" (click)="addTeamField()" color="primary"><mat-icon>add</mat-icon>Add team</button> -->
 
-    <div style="display: flex; justify-content: space-between; width: 100%;">
+    <!-- <div style="display: flex; justify-content: space-between; width: 100%;">
 
       <button mat-button matStepperPrevious>Back</button>
 
       <button mat-button matStepperNext>Next</button>
 
-    </div>
+    </div> -->
 
   </mat-step>
 
   <!-- Step 3: Tournament Confirmation -->
   <mat-step>
     <ng-template matStepLabel>Confirmation</ng-template>
-    <!-- Display a summary of tournament details for confirmation -->
-    <p>Tournament Name: {{ tournamentDetailsFormGroup.value.name }}</p>
-    <!-- Display other details for confirmation -->
-    <button mat-button matStepperPrevious>Back</button>
-    <button mat-button (click)="createTournament()">Create tournament</button>
+
+    <div style="display: grid; align-items: center;">
+
+      <div style="display: flex; justify-content: space-between;">
+
+        <!-- Display a summary of tournament details for confirmation -->
+        <p>Tournament Name: {{ tournamentDetailsFormGroup.value.name }}</p>
+        <!-- Display other details for confirmation -->
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" (click)="createTournament()">Create tournament</button>
+
+      </div>
+
+    </div>
   </mat-step>
 </mat-stepper>
