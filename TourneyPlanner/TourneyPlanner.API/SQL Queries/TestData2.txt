@@ -1,0 +1,282 @@
+{
+  "name": "NBA Knockout",
+  "tournamentTypeId": 1,
+  "gameTypeId": 2,
+  "startDate": "2023-10-10T08:26:45.435Z",
+  "randomnizeTeams": true,
+  "teams": [
+	  {
+		"id": 0,
+		"teamName": "Phoenix Suns",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "LeBron",
+			"lastName": "James"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Stephen",
+			"lastName": "Curry"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Los Angeles Lakers",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Kevin",
+			"lastName": "Durant"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Kawhi",
+			"lastName": "Leonard"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Milwaukee Bucks",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Giannis",
+			"lastName": "Antetokounmpo"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Chris",
+			"lastName": "Paul"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Brooklyn Nets",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Joel",
+			"lastName": "Embiid"
+		  },
+		  {
+			"id": 0,
+			"firstName": "James",
+			"lastName": "Harden"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Golden State Warriors",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Luka",
+			"lastName": "Dončić"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Damian",
+			"lastName": "Lillard"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Boston Celtics",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Devin",
+			"lastName": "Booker"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Jayson",
+			"lastName": "Tatum"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Philadelphia 76ers",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Zion",
+			"lastName": "Williamson"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Russell",
+			"lastName": "Westbrook"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Los Angeles Clippers",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Ja",
+			"lastName": "Morant"
+		  },
+		  {
+			"id": 0,
+			"firstName": "DeAaron",
+			"lastName": "Fox"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Toronto Raptors",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Trae",
+			"lastName": "Young"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Ben",
+			"lastName": "Simmons"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Miami Heat",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Jimmy",
+			"lastName": "Butler"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Bam",
+			"lastName": "Adebayo"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Dallas Mavericks",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Kristaps",
+			"lastName": "Porziņģis"
+		  },
+		  {
+			"id": 0,
+			"firstName": "John",
+			"lastName": "Collins"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Houston Rockets",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "DeMar",
+			"lastName": "DeRozan"
+		  },
+		  {
+			"id": 0,
+			"firstName": "CJ",
+			"lastName": "McCollum"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Utah Jazz",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Rudy",
+			"lastName": "Gobert"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Mike",
+			"lastName": "Conley"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "San Antonio Spurs",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "Dejounte",
+			"lastName": "Murray"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Lonzo",
+			"lastName": "Ball"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "Chicago Bulls",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "LaMelo",
+			"lastName": "Ball"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Zach",
+			"lastName": "LaVine"
+		  }
+		]
+	  },
+	  {
+		"id": 0,
+		"teamName": "New York Knicks",
+		"score": 0,
+		"players": [
+		  {
+			"id": 0,
+			"firstName": "RJ",
+			"lastName": "Barrett"
+		  },
+		  {
+			"id": 0,
+			"firstName": "Julius",
+			"lastName": "Randle"
+		  }
+		]
+	  }
+	]
+
+}

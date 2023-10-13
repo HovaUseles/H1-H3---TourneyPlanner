@@ -30,6 +30,11 @@ class _TournamentState extends State<TournamentScreen> {
   _TournamentState(this.tournamentId);
 
   late TournamentDto tournament;
+
+  int siblingSpacing = 50;
+  int levelSpacing = 200;
+  int subtreeSpacing = 80;
+
   @override
   void initState() {
     super.initState();
@@ -43,9 +48,9 @@ class _TournamentState extends State<TournamentScreen> {
     builder.orientation = BuchheimWalkerConfiguration.ORIENTATION_RIGHT_LEFT;
 
     // Can be used for styling seperation between edges depending on team amount in tournament
-    builder.siblingSeparation = 50;
-    builder.levelSeparation = 150;
-    builder.subtreeSeparation = 80;
+    builder.siblingSeparation = siblingSpacing;
+    builder.levelSeparation = levelSpacing;
+    builder.subtreeSeparation = subtreeSpacing;
   }
 
   @override
@@ -165,7 +170,7 @@ class _TournamentState extends State<TournamentScreen> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: SizedBox(
-                width: 110,
+                width: levelSpacing - 30,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -202,7 +207,7 @@ class _TournamentState extends State<TournamentScreen> {
       case 2:
         return "Quarter-final";
       default:
-        return "Matchup ${matchup.id}";
+        return "R${matchup.round}M${matchup.id}";
     }
   }
 }
