@@ -118,3 +118,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//test.com    app.Run();

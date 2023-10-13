@@ -40,7 +40,7 @@ export class BracketService {
     for (let matchup of matchups) {
       for (let teamData of matchup.teams) {
         if (this.teams.filter((x) => { x.id == teamData.id }).length == 0) {
-          this.teams.push({ id: teamData.id, teamName: teamData.teamName, players: teamData.players });
+          this.teams.push({ id: teamData.id, teamName: teamData.teamName, score: 0, players: teamData.players });
           this.participants.push({ id: teamData.id, name: teamData.teamName, tournament_id: tournamentId })
         };
       };

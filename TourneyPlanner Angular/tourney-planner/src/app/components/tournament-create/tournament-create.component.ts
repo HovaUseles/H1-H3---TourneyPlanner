@@ -113,21 +113,10 @@ export class TournamentCreateComponent {
         firstName: this.teamsFormGroup.get("firstName4")?.value,
         lastName: this.teamsFormGroup.get("lastName4")?.value
       }];
-    let teams: Team[] = [{id: 0, teamName: this.teamsFormGroup.get("name1")?.value, players: [players[0]]},
-    {id: 0, teamName: this.teamsFormGroup.get("name2")?.value, players: [players[0]]},
-    {id: 0, teamName: this.teamsFormGroup.get("name3")?.value, players: [players[0]]},
-    {id: 0, teamName: this.teamsFormGroup.get("name4")?.value, players: [players[0]]}];
-    // for (let index = 0; index < (<FormArray>(this.teamsFormGroup.get("teams"))).length; index++) {
-    //   for (let idx = 0; idx < this.getPlayers(index).length; idx++) {
-    //     let player: Player = {
-    //       id: 0,
-    //       firstName: this.teamsFormGroup.get("teams." + index + ".players" + idx + "firstName")?.value,
-    //       lastName: this.teamsFormGroup.get("teams." + index + ".players" + idx + "firstName")?.value,
-    //     }
-    //     players.push(player)
-    //   }
-    //   teams.push({ id: 0, teamName: this.teamsFormGroup.get("teams." + index + ".name")?.value, players: players });
-    // }
+    let teams: Team[] = [{id: 0, teamName: this.teamsFormGroup.get("name1")?.value, score: 0, players: [players[0]]},
+    {id: 0, teamName: this.teamsFormGroup.get("name2")?.value, score: 0, players: [players[1]]},
+    {id: 0, teamName: this.teamsFormGroup.get("name3")?.value, score: 0, players: [players[2]]},
+    {id: 0, teamName: this.teamsFormGroup.get("name4")?.value, score: 0, players: [players[3]]}];
 
     let tournament: CreateTournament = {
       name: this.tournamentDetailsFormGroup.get("name")?.value,
@@ -138,10 +127,8 @@ export class TournamentCreateComponent {
       teams: teams
     }
 
-    console.log(tournament)
-
     this.tournamentService.createTournament(tournament);
-    // this.matDialogRef.close(true);
+    this.matDialogRef.close(true);
   }
 
   closeDialog() {
