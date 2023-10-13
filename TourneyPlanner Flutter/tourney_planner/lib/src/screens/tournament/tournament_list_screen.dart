@@ -66,7 +66,8 @@ class _TournamentListScreenState extends State<TournamentListScreen> {
                       leading: const CircleAvatar(
                         // Display the Flutter Logo image asset.
                         foregroundImage:
-                            AssetImage('assets/images/flutter_logo.png'),
+                            // AssetImage('assets/images/flutter_logo.png'),
+                            AssetImage('assets/logo.png'),
                       ),
                       onTap: () {
                         // Navigate to the details page. If the user leaves and returns to

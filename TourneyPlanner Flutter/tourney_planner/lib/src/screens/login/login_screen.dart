@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       errorText: 'Enter email address'),
                                   EmailValidator(errorText: 'Invalid email'),
                                 ]),
+                                initialValue: "jaco7702@zbc.dk",
                                 decoration: const InputDecoration(
                                     hintText: 'Email',
                                     labelText: 'Email',
